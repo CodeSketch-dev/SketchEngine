@@ -1,15 +1,15 @@
 {
-  "name": "com.codesketch",
-  "displayName": "CodeSketch",
-  "version": "0.1.1",
+  "name": "com.SketchEngine",
+  "displayName": "SketchEngine",
+  "version": "1.0.1",
   "unity": "2022.3",
-  "description": "Core framework for CodeSketch projects (runtime, editor tools, utilities).",
+  "description": "Core framework for Unity projects (runtime, editor tools, utilities).",
   "author": {
-    "name": "CodeSketch",
+    "name": "SketchEngine",
     "url": "https://github.com/CodeSketch-dev"
   },
   "keywords": [
-    "codesketch",
+    "SketchEngine",
     "framework",
     "unity",
     "installer",
