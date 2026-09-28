@@ -1,4 +1,4 @@
-namespace CodeSketch.Audio
+namespace SketchEngine.Audio
 {
     [System.Serializable]
     public enum AudioType

@@ -1,8 +1,8 @@
 using System.Runtime.CompilerServices;
-using CodeSketch.Diagnostics;
+using SketchEngine.Diagnostics;
 using UnityEngine;
 
-namespace CodeSketch.Core.Extensions
+namespace SketchEngine.Core.Extensions
 {
     public static class ExtensionsDiagnostic
     {

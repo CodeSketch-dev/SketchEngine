@@ -3,7 +3,7 @@ using PrimeTween;
 using UnityEngine;
 using UnityEngine.UI;
 
-namespace CodeSketch.Utilities.UI
+namespace SketchEngine.Utilities.UI
 {
     /// <summary>
     ///     Tiện ích điều khiển Slider:

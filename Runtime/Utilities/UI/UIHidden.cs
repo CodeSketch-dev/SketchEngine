@@ -1,8 +1,8 @@
-using CodeSketch.Data;
-using CodeSketch.Mono;
+using SketchEngine.Data;
+using SketchEngine.Mono;
 using UnityEngine;
 
-namespace CodeSketch.Utilities.UI
+namespace SketchEngine.Utilities.UI
 {
     public class UIHidden : MonoBase
     {

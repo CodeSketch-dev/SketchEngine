@@ -5,7 +5,7 @@ using System.IO;
 using System.Runtime.Serialization.Formatters.Binary;
 #endif
 
-namespace CodeSketch.Data
+namespace SketchEngine.Data
 {
     public static class DataSerializer
     {

@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Runtime.CompilerServices;
 using UnityEngine;
 
-namespace CodeSketch.Optimize
+namespace SketchEngine.Optimize
 {
     public static class OptCollisionLookup2D
     {

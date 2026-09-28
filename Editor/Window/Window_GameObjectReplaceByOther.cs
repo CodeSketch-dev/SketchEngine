@@ -2,7 +2,7 @@ using System.Collections.Generic;
 using UnityEditor;
 using UnityEngine;
 
-namespace CodeSketch.Editor
+namespace SketchEngine.Editor
 {
     public class Window_GameObjectReplaceByOther : EditorWindow
     {

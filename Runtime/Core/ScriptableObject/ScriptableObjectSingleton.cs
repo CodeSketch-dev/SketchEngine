@@ -1,8 +1,8 @@
 using UnityEngine;
 
-using CodeSketch.SO.Editor;
+using SketchEngine.SO.Editor;
 
-namespace CodeSketch.SO
+namespace SketchEngine.SO
 {
     public abstract class ScriptableObjectSingleton<T> : ScriptableObject where T : ScriptableObject
     {

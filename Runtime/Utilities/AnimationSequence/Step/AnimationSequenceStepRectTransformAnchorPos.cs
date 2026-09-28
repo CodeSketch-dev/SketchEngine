@@ -1,7 +1,7 @@
 using DG.Tweening;
 using UnityEngine;
 
-namespace CodeSketch.Utilities.Animations
+namespace SketchEngine.Utilities.Animations
 {
     public class AnimationSequenceStepRectTransformAnchorPos : AnimationSequenceStepRectTransform
     {

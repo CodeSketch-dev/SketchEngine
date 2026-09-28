@@ -1,9 +1,9 @@
-using CodeSketch.Core.Extensions;
+using SketchEngine.Core.Extensions;
 using DG.Tweening;
 using Sirenix.OdinInspector;
 using UnityEngine;
 
-namespace CodeSketch.Utilities.Animations
+namespace SketchEngine.Utilities.Animations
 {
     public class AnimationSequenceStepSpriteRenderer : AnimationSequenceStepAction<SpriteRenderer>
     {

@@ -1,15 +1,15 @@
 using System.Collections.Generic;
-using CodeSketch.Core.Extensions;
+using SketchEngine.Core.Extensions;
 using Cysharp.Threading.Tasks;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
-using CodeSketch.Mono;
-using CodeSketch.Core.Extensions.CSharp;
-using CodeSketch.Diagnostics;
+using SketchEngine.Mono;
+using SketchEngine.Core.Extensions.CSharp;
+using SketchEngine.Diagnostics;
 using UnityEngine.AddressableAssets;
 
-namespace CodeSketch.UIView
+namespace SketchEngine.UIView
 {
     public class ViewContainer : MonoSingleton<ViewContainer>
     {

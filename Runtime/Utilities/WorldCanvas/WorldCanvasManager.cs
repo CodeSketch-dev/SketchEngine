@@ -2,7 +2,7 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
-namespace CodeSketch.Utilities.CanvasWorld
+namespace SketchEngine.Utilities.CanvasWorld
 {
     /// <summary>
     /// WorldCanvasManager

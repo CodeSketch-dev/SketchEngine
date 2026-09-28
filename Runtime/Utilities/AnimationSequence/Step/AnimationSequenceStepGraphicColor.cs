@@ -1,10 +1,10 @@
-using CodeSketch.Core.Extensions;
+using SketchEngine.Core.Extensions;
 using DG.Tweening;
 using Sirenix.OdinInspector;
 using UnityEngine;
 using UnityEngine.UI;
 
-namespace CodeSketch.Utilities.Animations
+namespace SketchEngine.Utilities.Animations
 {
     public class AnimationSequenceStepGraphicColor : AnimationSequenceStepAction<Graphic>
     {

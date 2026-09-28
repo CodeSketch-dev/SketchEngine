@@ -1,11 +1,11 @@
 using System;
-using CodeSketch.Mono;
+using SketchEngine.Mono;
 using DG.Tweening;
 using Sirenix.OdinInspector;
 using UnityEngine;
 using UnityEngine.UI;
 
-namespace CodeSketch.Utilities.UI
+namespace SketchEngine.Utilities.UI
 {
     public class UIImageAnimated : MonoBase
     {

@@ -1,12 +1,12 @@
 using System;
 using System.Collections.Generic;
-using CodeSketch.Diagnostics;
+using SketchEngine.Diagnostics;
 using UnityEngine;
 using UnityEngine.Audio;
 
-using CodeSketch.SO;
+using SketchEngine.SO;
 
-namespace CodeSketch.Audio
+namespace SketchEngine.Audio
 {
     public class AudioMixerFactory : ScriptableObjectSingleton<AudioMixerFactory>
     {

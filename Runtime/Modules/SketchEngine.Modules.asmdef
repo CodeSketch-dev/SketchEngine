@@ -1,0 +1,18 @@
+{
+    "name": "SketchEngine.Modules",
+    "rootNamespace": "SketchEngine.Modules",
+    "references": [
+        "SketchEngine.Data",
+        "SketchEngine",
+        "GUID:6c5aba480c1076d459c1e12388da974d"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}

@@ -1,7 +1,7 @@
 using Sirenix.OdinInspector;
 using UnityEngine;
 
-namespace CodeSketch.Utilities
+namespace SketchEngine.Utilities
 {
     public class SpriteRendererFitSize : MonoBehaviour
     {

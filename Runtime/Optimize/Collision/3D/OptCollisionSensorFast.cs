@@ -1,13 +1,13 @@
 using System;
 using UnityEngine;
 
-namespace CodeSketch.Optimize
+namespace SketchEngine.Optimize
 {
     /// <summary>
     /// OptCollisionSensor kế thừa MonoCachedFast — có thêm GetCached&lt;T&gt;() component caching.
     /// Dùng khi sensor cần GetComponent không-GC trên cùng GameObject.
     /// </summary>
-    public abstract class OptCollisionSensorFast<T> : CodeSketch.MonoCachedFast
+    public abstract class OptCollisionSensorFast<T> : SketchEngine.MonoCachedFast
         where T : class
     {
         Action<T> _cachedCollisionEnter;

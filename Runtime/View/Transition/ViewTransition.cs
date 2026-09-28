@@ -1,7 +1,7 @@
 using DG.Tweening;
 using System;
 
-namespace CodeSketch.UIView
+namespace SketchEngine.UIView
 {
     [Serializable]
     public abstract class ViewTransition

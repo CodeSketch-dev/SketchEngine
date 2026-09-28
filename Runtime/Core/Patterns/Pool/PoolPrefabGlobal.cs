@@ -3,9 +3,9 @@ using System.Runtime.CompilerServices;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
-using CodeSketch.Mono;
+using SketchEngine.Mono;
 
-namespace CodeSketch.Patterns.Pool
+namespace SketchEngine.Patterns.Pool
 {
     public static class PoolPrefabGlobal
     {

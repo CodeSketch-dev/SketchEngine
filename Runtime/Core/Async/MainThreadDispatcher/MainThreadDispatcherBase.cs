@@ -1,7 +1,7 @@
 using System;
 using System.Collections.Concurrent;
 
-namespace CodeSketch.Core.MainThread
+namespace SketchEngine.Core.MainThread
 {
     abstract class MainThreadDispatcherBase : IMainThreadDispatcher
     {

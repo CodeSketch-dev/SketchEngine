@@ -1,7 +1,7 @@
 using UnityEngine;
 using UnityEngine.UI;
 
-namespace CodeSketch.Utilities.UI
+namespace SketchEngine.Utilities.UI
 {
     public class UIRawImageScroller : MonoBehaviour
     {

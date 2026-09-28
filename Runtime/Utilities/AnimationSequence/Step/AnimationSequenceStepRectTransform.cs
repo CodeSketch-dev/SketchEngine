@@ -1,7 +1,7 @@
 using Sirenix.OdinInspector;
 using UnityEngine;
 
-namespace CodeSketch.Utilities.Animations
+namespace SketchEngine.Utilities.Animations
 {
     public abstract class AnimationSequenceStepRectTransform : AnimationSequenceStepAction<RectTransform>
     {

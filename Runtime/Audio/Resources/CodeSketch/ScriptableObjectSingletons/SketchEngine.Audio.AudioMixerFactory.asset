@@ -1,0 +1,28 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1999cba0249be3b41be8f3ad4c4a5b29, type: 3}
+  m_Name: SketchEngine.Audio.AudioMixerFactory
+  m_EditorClassIdentifier: 
+  _mappers:
+  - Bus: 10
+    MixerGroup: {fileID: 24300002, guid: 90f5f873c1de8eb4ab830b269acaa480, type: 2}
+  - Bus: 20
+    MixerGroup: {fileID: -5357916086469550714, guid: 90f5f873c1de8eb4ab830b269acaa480, type: 2}
+  - Bus: 30
+    MixerGroup: {fileID: -3359195394459708083, guid: 90f5f873c1de8eb4ab830b269acaa480, type: 2}
+  - Bus: 40
+    MixerGroup: {fileID: 606871298556803624, guid: 90f5f873c1de8eb4ab830b269acaa480, type: 2}
+  - Bus: 50
+    MixerGroup: {fileID: 8615513799342064205, guid: 90f5f873c1de8eb4ab830b269acaa480, type: 2}
+  - Bus: 60
+    MixerGroup: {fileID: 1697392617452219322, guid: 90f5f873c1de8eb4ab830b269acaa480, type: 2}
+  _sfxUIButtonClick: {fileID: 11400000, guid: 8d220b14809976346a13d1c7a67117ac, type: 2}

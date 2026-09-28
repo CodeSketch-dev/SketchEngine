@@ -3,7 +3,7 @@ using Sirenix.OdinInspector;
 using UnityEngine;
 using UnityEngine.Events;
 
-namespace CodeSketch.Utilities.Animations
+namespace SketchEngine.Utilities.Animations
 {
     public class AnimationSequenceStepCallback : AnimationSequenceStep
     {

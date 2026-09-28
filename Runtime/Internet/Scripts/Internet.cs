@@ -1,13 +1,13 @@
 using System;
 using System.Threading;
-using CodeSketch.Core.Async;
+using SketchEngine.Core.Async;
 using Cysharp.Threading.Tasks;
 using UnityEngine;
 using UnityEngine.Networking;
-using CodeSketch.Diagnostics;
-using CodeSketch.UIPopup;
+using SketchEngine.Diagnostics;
+using SketchEngine.UIPopup;
 
-namespace CodeSketch.Internet
+namespace SketchEngine.Internet
 {
     public static class Internet
     {

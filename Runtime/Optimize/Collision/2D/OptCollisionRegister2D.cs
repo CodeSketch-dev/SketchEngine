@@ -1,7 +1,7 @@
-using CodeSketch.Mono;
+using SketchEngine.Mono;
 using UnityEngine;
 
-namespace CodeSketch.Optimize
+namespace SketchEngine.Optimize
 {
     public abstract class OptCollisionRegister2D<T> : MonoCached where T : class
     {

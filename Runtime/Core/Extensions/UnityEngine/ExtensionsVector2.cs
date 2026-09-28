@@ -1,6 +1,6 @@
 using UnityEngine;
 
-namespace CodeSketch.Core.Extensions
+namespace SketchEngine.Core.Extensions
 {
     public static class ExtensionsVector2
     {

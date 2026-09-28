@@ -3,7 +3,7 @@ using System.IO;
 using UnityEditor;
 using UnityEngine;
 
-namespace CodeSketch.Editor
+namespace SketchEngine.Editor
 {
     public class Window_SpriteToPNG : EditorWindow
     {

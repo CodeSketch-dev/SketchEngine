@@ -1,10 +1,10 @@
 using Sirenix.OdinInspector;
 using System;
-using CodeSketch.Core.UI;
+using SketchEngine.Core.UI;
 using UnityEngine;
 using UnityEngine.AddressableAssets;
 
-namespace CodeSketch.UIView
+namespace SketchEngine.UIView
 {
     public class ViewButtonOpen : UIButtonBase
     {

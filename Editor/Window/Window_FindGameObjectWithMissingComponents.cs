@@ -4,7 +4,7 @@ using UnityEditor;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
-namespace CodeSketch.Editor
+namespace SketchEngine.Editor
 {
     public class Window_FindGameObjectWithMissingComponents : EditorWindow
     {

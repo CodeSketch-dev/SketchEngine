@@ -1,7 +1,7 @@
 using System.Runtime.CompilerServices;
 using UnityEngine;
 
-namespace CodeSketch.Core.Extensions.mSystem
+namespace SketchEngine.Core.Extensions.mSystem
 {
     public static class ExtensionsString 
     {

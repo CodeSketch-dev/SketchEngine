@@ -5,7 +5,7 @@ using System.Reflection;
 using UnityEditor;
 using UnityEngine;
 
-namespace CodeSketch.Editor.Scriptable
+namespace SketchEngine.Editor.Scriptable
 {
     public class ScriptableObjectLookup
     {
@@ -22,12 +22,12 @@ namespace CodeSketch.Editor.Scriptable
 
                 bool isGameAssembly = assemblyName == "Assembly-CSharp";
 
-                bool isCodeSketchRuntime =
-                    assemblyName.StartsWith("CodeSketch") &&
+                bool isSketchEngineRuntime =
+                    assemblyName.StartsWith("SketchEngine") &&
                     !assemblyName.Contains("Editor");
                 bool isInstaller = assemblyName.Contains("CodeSketch.Installer");
 
-                if (!isGameAssembly && !isCodeSketchRuntime || isInstaller)
+                if (!isGameAssembly && !isSketchEngineRuntime || isInstaller)
                     continue;
 
                 try
@@ -49,7 +49,7 @@ namespace CodeSketch.Editor.Scriptable
 
             if (allScriptableObjects.Count == 0)
             {
-                Debug.LogWarning("No ScriptableObject types found in Assembly-CSharp or CodeSketch assemblies.");
+                Debug.LogWarning("No ScriptableObject types found in Assembly-CSharp or SketchEngine assemblies.");
                 return;
             }
 

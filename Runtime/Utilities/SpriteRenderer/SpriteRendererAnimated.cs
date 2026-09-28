@@ -1,10 +1,10 @@
-﻿using CodeSketch.Mono;
+﻿using SketchEngine.Mono;
 using DG.Tweening;
 using Sirenix.OdinInspector;
 using UnityEngine;
 using UnityEngine.Serialization;
 
-namespace CodeSketch.Utitlities
+namespace SketchEngine.Utitlities
 {
     public class SpriteRendererAnimated : MonoBase
     {

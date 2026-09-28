@@ -2,9 +2,9 @@ using DG.Tweening;
 using UnityEngine;
 using UnityEngine.UI;
 
-using CodeSketch.Core.Extensions;
+using SketchEngine.Core.Extensions;
 
-namespace CodeSketch.UIPopup
+namespace SketchEngine.UIPopup
 {
     public class PopupAnimationBackground : PopupAnimation
     {

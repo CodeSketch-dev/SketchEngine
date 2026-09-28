@@ -3,9 +3,9 @@ using DG.Tweening;
 using Sirenix.OdinInspector;
 using UnityEngine;
 
-using CodeSketch.Mono;
+using SketchEngine.Mono;
 
-namespace CodeSketch.UIView
+namespace SketchEngine.UIView
 {
     public class ViewTransitionEntity : MonoBase
     {

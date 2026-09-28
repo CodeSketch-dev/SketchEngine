@@ -1,7 +1,7 @@
 using DG.Tweening;
 using UnityEngine;
 
-namespace CodeSketch.UIView
+namespace SketchEngine.UIView
 {
     public class ViewTransitionTransformScale : ViewTransitionTransform
     {

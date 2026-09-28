@@ -4,7 +4,7 @@ using UnityEditor;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
-namespace CodeSketch.Editor
+namespace SketchEngine.Editor
 {
     /// <summary>
     /// Bộ công cụ tiện ích cho Editor trong GOCD Framework

@@ -3,9 +3,9 @@ using Sirenix.OdinInspector;
 using UnityEngine;
 using UnityEngine.UI;
 
-using CodeSketch.Mono;
+using SketchEngine.Mono;
 
-namespace CodeSketch.Utilities.UI
+namespace SketchEngine.Utilities.UI
 {
     public class UIRawImageAnimated : MonoBase
     {

@@ -1,6 +1,6 @@
 using System.Threading;
 
-namespace CodeSketch.AdsLoading
+namespace SketchEngine.AdsLoading
 {
     public class AdsLoadingCancelToken
     {

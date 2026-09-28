@@ -1,4 +1,4 @@
-using CodeSketch.Core.Extensions;
+using SketchEngine.Core.Extensions;
 using UnityEngine;
 using UnityEngine.Serialization;
 
@@ -6,7 +6,7 @@ using UnityEngine.Serialization;
 using UnityEditor;
 #endif
 
-namespace CodeSketch.Diagnostics
+namespace SketchEngine.Diagnostics
 {
     [ExecuteAlways]
     public class CodeSketchDebugCamera : MonoBehaviour

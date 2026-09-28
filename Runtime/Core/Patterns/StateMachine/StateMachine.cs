@@ -1,7 +1,7 @@
 using System;
 using System.Collections.Generic;
 
-namespace CodeSketch.Patterns.StateSystem
+namespace SketchEngine.Patterns.StateSystem
 {
     /// <summary>
     /// A lightweight state machine.

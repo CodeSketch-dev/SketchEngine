@@ -1,7 +1,7 @@
 ﻿using Sirenix.OdinInspector;
 using UnityEngine;
 
-namespace CodeSketch.Audio
+namespace SketchEngine.Audio
 {
     [System.Serializable]
     public class AudioConfig : ScriptableObject

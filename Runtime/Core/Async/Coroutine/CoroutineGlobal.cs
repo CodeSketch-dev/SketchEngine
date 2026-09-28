@@ -1,9 +1,9 @@
 using System;
 using System.Collections;
-using CodeSketch.Mono;
+using SketchEngine.Mono;
 using UnityEngine;
 
-namespace CodeSketch.Core.Async
+namespace SketchEngine.Core.Async
 {
     /// <summary>
     /// Global coroutine runner.

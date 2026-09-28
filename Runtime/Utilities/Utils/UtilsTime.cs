@@ -1,7 +1,7 @@
 using System;
 using UnityEngine;
 
-namespace CodeSketch.Utilities.Utils
+namespace SketchEngine.Utilities.Utils
 {
     /// <summary>
     /// Unified time utilities for save/load, cooldown, offline progress,

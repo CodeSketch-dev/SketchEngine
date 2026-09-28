@@ -1,0 +1,20 @@
+{
+    "name": "SketchEngine.UIView",
+    "rootNamespace": "SketchEngine.UIView",
+    "references": [
+        "SketchEngine",
+        "UniTask",
+        "Unity.Addressables",
+        "Unity.ResourceManager",
+        "DOTween.Modules"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}

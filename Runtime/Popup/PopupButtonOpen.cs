@@ -1,9 +1,9 @@
 ﻿using Sirenix.OdinInspector;
 using System;
-using CodeSketch.Core.UI;
+using SketchEngine.Core.UI;
 using UnityEngine;
 
-namespace CodeSketch.UIPopup
+namespace SketchEngine.UIPopup
 {
     public class PopupButtonOpen : UIButtonBase
     {

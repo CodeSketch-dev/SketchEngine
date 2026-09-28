@@ -1,6 +1,6 @@
 using UnityEngine;
 
-namespace CodeSketch.Core.Extensions
+namespace SketchEngine.Core.Extensions
 {
     /// <summary>
     /// Extension methods tiện ích cho Rigidbody2D

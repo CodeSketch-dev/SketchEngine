@@ -5,9 +5,9 @@ using Sirenix.OdinInspector;
 using UnityEngine;
 using UnityEngine.Events;
 
-using CodeSketch.Core.UI;
+using SketchEngine.Core.UI;
 
-namespace CodeSketch.UIPopup
+namespace SketchEngine.UIPopup
 {
     public class PopupButtonNoThanks : UIButtonBase
     {

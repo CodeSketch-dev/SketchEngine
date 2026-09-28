@@ -2,7 +2,7 @@
 using UnityEditor;
 #endif
 
-namespace CodeSketch.Core.MainThread
+namespace SketchEngine.Core.MainThread
 {
     class MainThreadDispatcherEditor : MainThreadDispatcherBase
     {

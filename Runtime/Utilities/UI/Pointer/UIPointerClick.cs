@@ -1,8 +1,8 @@
 using System;
-using CodeSketch.Mono;
+using SketchEngine.Mono;
 using UnityEngine.EventSystems;
 
-namespace CodeSketch.Utilities.UI
+namespace SketchEngine.Utilities.UI
 {
     public class UIPointerClick : MonoBase, IPointerDownHandler, IPointerUpHandler
     {

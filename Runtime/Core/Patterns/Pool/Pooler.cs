@@ -1,8 +1,8 @@
 using System.Collections.Generic;
-using CodeSketch.Mono;
+using SketchEngine.Mono;
 using UnityEngine;
 
-namespace CodeSketch.Patterns.Pool
+namespace SketchEngine.Patterns.Pool
 {
     public class Pooler : MonoSingleton<Pooler>
     {

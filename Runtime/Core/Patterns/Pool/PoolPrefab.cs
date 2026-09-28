@@ -4,7 +4,7 @@ using UnityEngine;
 using UnityEngine.Pool;
 using Object = UnityEngine.Object;
 
-namespace CodeSketch.Patterns.Pool
+namespace SketchEngine.Patterns.Pool
 {
     public sealed class PoolPrefab
     {

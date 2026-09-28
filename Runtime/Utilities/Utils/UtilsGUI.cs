@@ -1,8 +1,8 @@
-using CodeSketch.Mono;
+using SketchEngine.Mono;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
-namespace CodeSketch.Utilities.Utils
+namespace SketchEngine.Utilities.Utils
 {
     public static class UtilsGUI
     {

@@ -1,9 +1,9 @@
 using System.Runtime.CompilerServices;
-using CodeSketch.Mono;
+using SketchEngine.Mono;
 using UnityEngine;
 using UnityEngine.UI;
 
-namespace CodeSketch.Core.UI
+namespace SketchEngine.Core.UI
 {
     public class UIButtonBase : MonoBase
     {

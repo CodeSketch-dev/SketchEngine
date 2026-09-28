@@ -1,9 +1,9 @@
-using CodeSketch.Core.Extensions;
-using CodeSketch.Mono;
+using SketchEngine.Core.Extensions;
+using SketchEngine.Mono;
 using DG.Tweening;
 using UnityEngine;
 
-namespace CodeSketch.Utilities.CameraSystem
+namespace SketchEngine.Utilities.CameraSystem
 {
     /// <summary>
     /// Dùng để fit camera ortho sao cho khung nhìn vừa với RectTransform đích (dựa vào canvas).

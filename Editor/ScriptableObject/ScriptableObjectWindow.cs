@@ -4,7 +4,7 @@ using UnityEditor;
 using UnityEditor.ProjectWindowCallback;
 using UnityEngine;
 
-namespace CodeSketch.Editor.Scriptable
+namespace SketchEngine.Editor.Scriptable
 {
     internal class EndNameEdit : EndNameEditAction
     {

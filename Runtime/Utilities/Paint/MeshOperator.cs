@@ -1,7 +1,7 @@
 using System;
 using UnityEngine;
 
-namespace CodeSketch.Utilities.Paint
+namespace SketchEngine.Utilities.Paint
 {
     /// <summary>
     /// MeshOperator

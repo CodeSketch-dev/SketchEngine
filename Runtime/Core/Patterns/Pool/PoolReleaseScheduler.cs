@@ -2,7 +2,7 @@ using System.Collections.Generic;
 using Cysharp.Threading.Tasks;
 using UnityEngine;
 
-namespace CodeSketch.Patterns.Pool
+namespace SketchEngine.Patterns.Pool
 {
     public static class PoolReleaseScheduler
     {

@@ -1,6 +1,6 @@
-using CodeSketch.Core.UI;
+using SketchEngine.Core.UI;
 
-namespace CodeSketch.Debug
+namespace SketchEngine.Debug
 {
     public class DebugButton : UIButtonBase
     {

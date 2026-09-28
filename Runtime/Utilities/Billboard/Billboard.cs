@@ -1,7 +1,7 @@
-using CodeSketch.Mono;
+using SketchEngine.Mono;
 using UnityEngine;
 
-namespace CodeSketch.Utilities.Billboard
+namespace SketchEngine.Utilities.Billboard
 {
     public class Billboard : MonoBase
     {

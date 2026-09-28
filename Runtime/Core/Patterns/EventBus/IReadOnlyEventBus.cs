@@ -1,6 +1,6 @@
 using System;
 
-namespace CodeSketch.Patterns.Observer
+namespace SketchEngine.Patterns.Observer
 {
     /// <summary>
     /// Interface allows to subscribe and unsubscribe from event bus events.

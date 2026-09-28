@@ -2,7 +2,7 @@ using System;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
-namespace CodeSketch.Utilities.UI
+namespace SketchEngine.Utilities.UI
 {
     public class UIScrollRectExtends : ScrollRect
     {

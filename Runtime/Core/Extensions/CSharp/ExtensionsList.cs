@@ -4,7 +4,7 @@ using System.Linq;
 using UnityEngine;
 using Random = System.Random;
 
-namespace CodeSketch.Core.Extensions.CSharp
+namespace SketchEngine.Core.Extensions.CSharp
 {
     public static class ExtensionsList
     {

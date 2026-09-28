@@ -1,6 +1,6 @@
 using UnityEngine;
 
-namespace CodeSketch.Patterns.ChainOfResponsibility
+namespace SketchEngine.Patterns.ChainOfResponsibility
 {
     public abstract class ChainBase<T> : IChainHandler<T>
     {

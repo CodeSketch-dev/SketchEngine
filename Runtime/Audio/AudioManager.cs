@@ -1,12 +1,12 @@
 ﻿using UnityEngine;
 using UnityEngine.Pool;
 using System.Collections.Generic;
-using CodeSketch.Data;
-using CodeSketch.Diagnostics;
-using CodeSketch.Mono;
+using SketchEngine.Data;
+using SketchEngine.Diagnostics;
+using SketchEngine.Mono;
 using System;
 
-namespace CodeSketch.Audio
+namespace SketchEngine.Audio
 {
     public class AudioManager : MonoSingleton<AudioManager>
     {

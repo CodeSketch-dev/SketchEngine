@@ -1,9 +1,9 @@
-using CodeSketch.Core.Extensions;
+using SketchEngine.Core.Extensions;
 using DG.Tweening;
 using UnityEngine;
 using UnityEngine.UI;
 
-namespace CodeSketch.UIView
+namespace SketchEngine.UIView
 {
     [System.Serializable]
     public class ViewExtraBackground : ViewExtra

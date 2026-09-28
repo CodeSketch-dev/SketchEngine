@@ -1,7 +1,7 @@
-using CodeSketch.Mono;
+using SketchEngine.Mono;
 using UnityEngine;
 
-namespace CodeSketch.Core.MainThread
+namespace SketchEngine.Core.MainThread
 {
     class MainThreadDispatcherRuntime : MainThreadDispatcherBase
     {

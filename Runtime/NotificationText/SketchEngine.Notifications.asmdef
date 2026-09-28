@@ -1,0 +1,19 @@
+{
+    "name": "SketchEngine.Notification",
+    "rootNamespace": "SketchEngine.Notifications",
+    "references": [
+        "SketchEngine",
+        "SketchEngine.Popup",
+        "Unity.TextMeshPro",
+        "PrimeTween.Runtime"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}

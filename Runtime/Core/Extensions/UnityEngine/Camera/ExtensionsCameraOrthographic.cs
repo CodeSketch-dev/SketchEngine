@@ -1,6 +1,6 @@
 using UnityEngine;
 
-namespace CodeSketch.Core.Extensions
+namespace SketchEngine.Core.Extensions
 {
     /// <summary>
     /// Các hàm mở rộng dành riêng cho Camera Orthographic.

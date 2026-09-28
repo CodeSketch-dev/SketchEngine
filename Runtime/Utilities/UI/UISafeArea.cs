@@ -1,9 +1,9 @@
 ﻿using Sirenix.OdinInspector;
 using UnityEngine;
 
-using CodeSketch.Diagnostics;
+using SketchEngine.Diagnostics;
 
-namespace CodeSketch.Utilities.UI
+namespace SketchEngine.Utilities.UI
 {
     /// <summary>
     /// Safe area implementation for notched mobile devices. Usage:

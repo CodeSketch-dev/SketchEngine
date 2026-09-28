@@ -1,0 +1,17 @@
+{
+    "name": "SketchEngine.Settings",
+    "rootNamespace": "SketchEngine.Settings",
+    "references": [
+        "SketchEngine.Data",
+        "SketchEngine"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}

@@ -1,9 +1,9 @@
 using System;
 using UnityEngine;
 
-namespace CodeSketch.Optimize
+namespace SketchEngine.Optimize
 {
-    public abstract class OptCollisionSensorFast2D<T> : CodeSketch.MonoCachedFast where T : class
+    public abstract class OptCollisionSensorFast2D<T> : SketchEngine.MonoCachedFast where T : class
     {
         Action<T> _triggerEnter;
         Action<T> _triggerExit;

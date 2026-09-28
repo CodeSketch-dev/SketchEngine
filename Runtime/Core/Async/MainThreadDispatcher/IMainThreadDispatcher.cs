@@ -1,6 +1,6 @@
 using System;
 
-namespace CodeSketch.Core.MainThread
+namespace SketchEngine.Core.MainThread
 {
     interface IMainThreadDispatcher
     {

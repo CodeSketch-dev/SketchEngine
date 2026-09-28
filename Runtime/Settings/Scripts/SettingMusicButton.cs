@@ -1,4 +1,4 @@
-namespace CodeSketch.Settings
+namespace SketchEngine.Settings
 {
     public class SettingMusicButton : SettingButton
     {

@@ -1,6 +1,6 @@
-using CodeSketch.Data;
+using SketchEngine.Data;
 
-namespace CodeSketch.Debug
+namespace SketchEngine.Debug
 {
     public class DebugToggleAdsBannerSkip : DebugToggle
     {

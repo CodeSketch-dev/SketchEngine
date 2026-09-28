@@ -1,6 +1,6 @@
 using UnityEngine;
 
-namespace CodeSketch.Core.Extensions
+namespace SketchEngine.Core.Extensions
 {
     /// <summary>
     /// Các hàm mở rộng cho Camera Perspective để tính toán kích thước vùng nhìn thấy (view size)

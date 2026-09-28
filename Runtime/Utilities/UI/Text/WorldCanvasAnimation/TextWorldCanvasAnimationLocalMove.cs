@@ -1,9 +1,9 @@
-using CodeSketch.Core.Text;
+using SketchEngine.Core.Text;
 using DG.Tweening;
 using Sirenix.OdinInspector;
 using UnityEngine;
 
-namespace CodeSketch.Utilities.Text
+namespace SketchEngine.Utilities.Text
 {
     public class TextWorldCanvasAnimationLocalMove : TextWorldCanvasAnimation
     {

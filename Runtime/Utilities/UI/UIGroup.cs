@@ -1,11 +1,11 @@
 using System;
-using CodeSketch.Mono;
+using SketchEngine.Mono;
 using PrimeTween;
 using Sirenix.OdinInspector;
 using UnityEngine;
 using UnityEngine.Events;
 
-namespace CodeSketch.Utilities.UI
+namespace SketchEngine.Utilities.UI
 {
     /// <summary>
     /// Quản lý hiển thị và ẩn một UI Group có hiệu ứng fade (CanvasGroup).

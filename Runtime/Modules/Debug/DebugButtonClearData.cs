@@ -1,7 +1,7 @@
-using CodeSketch.Data;
+using SketchEngine.Data;
 using UnityEngine;
 
-namespace CodeSketch.Debug
+namespace SketchEngine.Debug
 {
     public class DebugButtonClearData : DebugButton
     {

@@ -1,0 +1,23 @@
+{
+    "name": "SketchEngine.Preset",
+    "rootNamespace": "SketchEngine.Preset",
+    "references": [
+        "SketchEngine",
+        "SketchEngine.Audio",
+        "SketchEngine.Haptic",
+        "SketchEngine.Settings",
+        "StompyRobot.SRDebugger",
+        "SketchEngine.Popup",
+        "SketchEngine.Data",
+        "Taptic"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}

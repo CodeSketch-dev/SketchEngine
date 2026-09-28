@@ -4,7 +4,7 @@ using System.Runtime.CompilerServices;
 using UnityEngine;
 using Debug = UnityEngine.Debug;
 
-namespace CodeSketch.Diagnostics
+namespace SketchEngine.Diagnostics
 {
     /// <summary>
     /// Class that contains methods useful for debugging.

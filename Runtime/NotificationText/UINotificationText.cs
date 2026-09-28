@@ -2,13 +2,13 @@ using Sirenix.OdinInspector;
 using UnityEngine;
 using TMPro;
 
-using CodeSketch.Core;
-using CodeSketch.Core.Extensions;
-using CodeSketch.Mono;
-using CodeSketch.UIPopup;
+using SketchEngine.Core;
+using SketchEngine.Core.Extensions;
+using SketchEngine.Mono;
+using SketchEngine.UIPopup;
 using PrimeTween;
 
-namespace CodeSketch.Notifications
+namespace SketchEngine.Notifications
 {
     public class UINotificationText : MonoCached
     {

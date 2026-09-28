@@ -2,7 +2,7 @@ using DG.Tweening;
 using Sirenix.OdinInspector;
 using UnityEngine;
 
-namespace CodeSketch.Utilities.Animations
+namespace SketchEngine.Utilities.Animations
 {
     public class AnimationSequenceStepCanvasGroup : AnimationSequenceStepAction<CanvasGroup>
     {

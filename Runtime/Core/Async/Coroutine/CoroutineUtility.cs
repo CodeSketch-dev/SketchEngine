@@ -2,7 +2,7 @@ using System;
 using System.Collections;
 using UnityEngine;
 
-namespace CodeSketch.Core.Async
+namespace SketchEngine.Core.Async
 {
     /// <summary>
     /// Static coroutine helper utilities.

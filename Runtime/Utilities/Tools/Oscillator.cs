@@ -1,7 +1,7 @@
-using CodeSketch.Mono;
+using SketchEngine.Mono;
 using UnityEngine;
 
-namespace CodeSketch.Utilities
+namespace SketchEngine.Utilities
 {
     /// <summary>
     /// Oscillator component.

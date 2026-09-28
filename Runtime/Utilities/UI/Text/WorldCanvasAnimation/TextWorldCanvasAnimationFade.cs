@@ -1,8 +1,8 @@
-using CodeSketch.Core.Text;
+using SketchEngine.Core.Text;
 using DG.Tweening;
 using UnityEngine;
 
-namespace CodeSketch.Utilities.Text
+namespace SketchEngine.Utilities.Text
 {
     [System.Serializable]
     public class TextWorldCanvasAnimationFade : TextWorldCanvasAnimation

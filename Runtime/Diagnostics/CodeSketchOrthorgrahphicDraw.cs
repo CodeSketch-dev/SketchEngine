@@ -1,12 +1,12 @@
-using CodeSketch.Core.Extensions;
-using CodeSketch.Mono;
+using SketchEngine.Core.Extensions;
+using SketchEngine.Mono;
 using UnityEngine;
 
 #if CODESKETCH_VERTX
 using Vertx.Debugging;
 #endif
 
-namespace CodeSketch.Diagnostics
+namespace SketchEngine.Diagnostics
 {
     public class CodeSketchOrthorgrahphicDraw : MonoBase
     {

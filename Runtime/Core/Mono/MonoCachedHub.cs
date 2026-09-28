@@ -1,7 +1,7 @@
-using CodeSketch.Mono;
+using SketchEngine.Mono;
 using UnityEngine;
 
-namespace CodeSketch
+namespace SketchEngine
 {
     public class MonoCachedHub<THub> : MonoCached where THub : Component
     {

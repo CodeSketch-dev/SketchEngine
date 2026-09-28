@@ -1,10 +1,10 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
-using CodeSketch.Diagnostics;
+using SketchEngine.Diagnostics;
 using UnityEngine;
 
-namespace CodeSketch.Data
+namespace SketchEngine.Data
 {
     public static class DataFileHandler
     {

@@ -1,9 +1,9 @@
 using System.Runtime.CompilerServices;
-using CodeSketch.Mono;
+using SketchEngine.Mono;
 using TMPro;
 using UnityEngine;
 
-namespace CodeSketch.Core.Text
+namespace SketchEngine.Core.Text
 {
     public class UITextWorldCanvas : MonoBase
     {

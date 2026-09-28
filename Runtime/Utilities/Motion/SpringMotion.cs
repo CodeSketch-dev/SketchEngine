@@ -1,6 +1,6 @@
 using UnityEngine;
 
-namespace CodeSketch.Utilities.Motion
+namespace SketchEngine.Utilities.Motion
 {
     public static class SpringMotion
     {

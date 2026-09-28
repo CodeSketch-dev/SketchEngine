@@ -1,7 +1,7 @@
-using CodeSketch.Core.UI;
+using SketchEngine.Core.UI;
 using UnityEngine;
 
-namespace CodeSketch.Utilities.UI
+namespace SketchEngine.Utilities.UI
 {
     public class UIButtonSpawnObject : UIButtonBase
     {

@@ -5,11 +5,11 @@ using UnityEngine.Events;
 using Sirenix.OdinInspector;
 using System.Threading;
 
-using CodeSketch.Mono;
+using SketchEngine.Mono;
 using Cysharp.Threading.Tasks;
-using CodeSketch.Core.Async;
+using SketchEngine.Core.Async;
 
-namespace CodeSketch.UIView
+namespace SketchEngine.UIView
 {
     [RequireComponent(typeof(CanvasGroup))]
     public sealed class View : MonoCached

@@ -1,7 +1,7 @@
 using System;
 using UnityEngine;
 
-namespace CodeSketch.Data
+namespace SketchEngine.Data
 {
     [System.Serializable]
     public partial class DataValue<T>

@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
-namespace CodeSketch.Core.Extensions
+namespace SketchEngine.Core.Extensions
 {
     /// <summary>
     /// Extension methods cho Transform hỗ trợ Position, Scale, Rotation, Children, Clone...

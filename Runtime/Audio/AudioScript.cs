@@ -1,10 +1,10 @@
-﻿using CodeSketch.Diagnostics;
+﻿using SketchEngine.Diagnostics;
 using UnityEngine;
 using PrimeTween;
 
-using CodeSketch.Mono;
+using SketchEngine.Mono;
 
-namespace CodeSketch.Audio
+namespace SketchEngine.Audio
 {
     public class AudioScript : MonoCached
     {

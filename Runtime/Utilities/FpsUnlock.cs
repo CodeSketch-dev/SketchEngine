@@ -1,6 +1,6 @@
 using UnityEngine;
 
-namespace CodeSketch.Utilities
+namespace SketchEngine.Utilities
 {
     /// <summary>
     /// Add this component to any object and it'll set the target frame rate and vsync count. Note that vsync count must be 0 for the target FPS to work.

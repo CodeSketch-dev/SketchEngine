@@ -2,7 +2,7 @@
 using Cysharp.Threading.Tasks;
 using UnityEngine;
 
-namespace CodeSketch.AdsLoading
+namespace SketchEngine.AdsLoading
 {
     public class AdsLoading : AdsLoadingSingleton<AdsLoading>
     {

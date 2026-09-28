@@ -1,6 +1,6 @@
 using System;
 
-namespace CodeSketch.Patterns.Observer
+namespace SketchEngine.Patterns.Observer
 {
     /// <summary>
     /// This is the simplest an fastest implementation for the event bus pattern.

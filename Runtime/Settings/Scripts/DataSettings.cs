@@ -1,7 +1,7 @@
-using CodeSketch.Data;
+using SketchEngine.Data;
 using UnityEngine;
 
-namespace CodeSketch.Settings
+namespace SketchEngine.Settings
 {
     [System.Serializable]
     public partial class DataSettings : DataBlock<DataSettings>

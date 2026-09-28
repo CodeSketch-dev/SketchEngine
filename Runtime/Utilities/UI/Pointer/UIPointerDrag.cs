@@ -2,7 +2,7 @@ using System;
 using UnityEngine;
 using UnityEngine.EventSystems;
 
-namespace CodeSketch.Utilities.UI
+namespace SketchEngine.Utilities.UI
 {
     public class UIPointerDrag : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHandler
     {

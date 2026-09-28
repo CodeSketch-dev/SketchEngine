@@ -4,7 +4,7 @@ using UnityEditor;
 using UnityEditorInternal;
 using System.Collections.Generic;
 
-namespace CodeSketch.Editor
+namespace SketchEngine.Editor
 {
     public class Window_TextureAutoCompressor : EditorWindow
     {

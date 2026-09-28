@@ -4,7 +4,7 @@ using UnityEditor;
 using UnityEditorInternal;
 using UnityEngine;
 
-namespace CodeSketch.Editor
+namespace SketchEngine.Editor
 {
     public class Window_FindGameObjectWithTag : EditorWindow
     {

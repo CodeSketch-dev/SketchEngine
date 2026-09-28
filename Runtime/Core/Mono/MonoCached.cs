@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace CodeSketch.Mono
+namespace SketchEngine.Mono
 {
     public class MonoCached : MonoBehaviour
     {

@@ -3,12 +3,12 @@ using DG.Tweening;
 using UnityEngine.Events;
 using Sirenix.OdinInspector;
 
-using CodeSketch.Audio;
-using CodeSketch.Core.Extensions;
-using CodeSketch.Core.Extensions.CSharp;
-using CodeSketch.Mono;
+using SketchEngine.Audio;
+using SketchEngine.Core.Extensions;
+using SketchEngine.Core.Extensions.CSharp;
+using SketchEngine.Mono;
 
-namespace CodeSketch.UIPopup
+namespace SketchEngine.UIPopup
 {
     [RequireComponent(typeof(CanvasGroup))]
     public class Popup : MonoCached

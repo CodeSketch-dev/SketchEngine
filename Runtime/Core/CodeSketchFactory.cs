@@ -1,9 +1,9 @@
 using Sirenix.OdinInspector;
 using UnityEngine;
 
-using CodeSketch.SO;
+using SketchEngine.SO;
 
-namespace CodeSketch.Core
+namespace SketchEngine.Core
 {
     public class CodeSketchFactory : ScriptableObjectSingleton<CodeSketchFactory>
     {

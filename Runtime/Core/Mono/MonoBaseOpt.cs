@@ -2,9 +2,9 @@ using System;
 using System.Collections.Generic;
 using UnityEngine;
 
-using CodeSketch.Mono;
+using SketchEngine.Mono;
 
-namespace CodeSketch.Core
+namespace SketchEngine.Core
 {
     /// <summary>
     /// MonoBehaviour base class with strict one-time component & interface resolution.

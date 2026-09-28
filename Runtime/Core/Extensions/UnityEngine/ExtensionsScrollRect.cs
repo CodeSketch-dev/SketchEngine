@@ -2,7 +2,7 @@ using PrimeTween;
 using UnityEngine;
 using UnityEngine.UI;
 
-namespace CodeSketch.Core.Extensions
+namespace SketchEngine.Core.Extensions
 {
     public static class ExtensionsScrollRect
     {

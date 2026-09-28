@@ -1,7 +1,7 @@
-using CodeSketch.Diagnostics;
+using SketchEngine.Diagnostics;
 using UnityEngine;
 
-namespace CodeSketch.Core.Extensions
+namespace SketchEngine.Core.Extensions
 {
     /// <summary>
     /// Các hàm mở rộng hỗ trợ thao tác với Sprite

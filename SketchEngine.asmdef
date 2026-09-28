@@ -1,0 +1,24 @@
+{
+    "name": "SketchEngine",
+    "rootNamespace": "SketchEngine",
+    "references": [
+        "Unity.TextMeshPro",
+        "Unity.Mathematics",
+        "Unity.Addressables",
+        "UniTask",
+        "Unity.ResourceManager",
+        "Taptic",
+        "StompyRobot.SRDebugger",
+        "PrimeTween.Runtime",
+        "DOTween.Modules"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}

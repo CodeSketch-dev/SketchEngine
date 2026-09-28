@@ -1,7 +1,7 @@
 using System;
 using UnityEngine;
 
-namespace CodeSketch.Core.MainThread
+namespace SketchEngine.Core.MainThread
 {
     /// <summary>
     /// Unity API isn't thread safe, so in case you are using threads,

@@ -1,7 +1,7 @@
 using System.Threading;
 using UnityEngine;
 
-namespace CodeSketch.AdsLoading
+namespace SketchEngine.AdsLoading
 {
     [DefaultExecutionOrder(-50)]
     public abstract class AdsLoadingSingleton<T> : MonoBehaviour where T : AdsLoadingSingleton<T>

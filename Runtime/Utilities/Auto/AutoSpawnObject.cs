@@ -1,7 +1,7 @@
-using CodeSketch.Mono;
+using SketchEngine.Mono;
 using UnityEngine;
 
-namespace CodeSketch.Utilities.Auto
+namespace SketchEngine.Utilities.Auto
 {
     public class AutoSpawnObject : MonoBase
     {

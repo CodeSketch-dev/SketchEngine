@@ -1,8 +1,8 @@
-using CodeSketch.SO;
+using SketchEngine.SO;
 using UnityEngine;
 using UnityEngine.Serialization;
 
-namespace CodeSketch.Internet
+namespace SketchEngine.Internet
 {
     public class InternetSettings : ScriptableObjectSingleton<InternetSettings>
     {

@@ -1,9 +1,9 @@
 using Sirenix.OdinInspector;
 using UnityEngine;
 
-using CodeSketch.SO.Editor;
+using SketchEngine.SO.Editor;
 
-namespace CodeSketch.SO
+namespace SketchEngine.SO
 {
     public class SerializedScriptableObjectSingleton<T> : SerializedScriptableObject where T : SerializedScriptableObject
     {

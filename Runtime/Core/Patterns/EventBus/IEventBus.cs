@@ -1,4 +1,4 @@
-namespace CodeSketch.Patterns.Observer
+namespace SketchEngine.Patterns.Observer
 {
     /// <summary>
     /// An interface for the event bus pattern.

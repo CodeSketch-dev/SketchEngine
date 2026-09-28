@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.EventSystems;
 
-namespace CodeSketch.Utilities.Extends
+namespace SketchEngine.Utilities.Extends
 {
     public class UtilsButtonSprite : MonoBehaviour
     {

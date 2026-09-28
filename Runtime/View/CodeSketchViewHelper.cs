@@ -1,7 +1,7 @@
 using Cysharp.Threading.Tasks;
 using UnityEngine.AddressableAssets;
 
-namespace CodeSketch.UIView
+namespace SketchEngine.UIView
 {
     public static class CodeSketchViewHelper
     {

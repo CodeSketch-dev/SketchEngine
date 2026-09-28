@@ -1,7 +1,7 @@
-using CodeSketch.Core.UI;
+using SketchEngine.Core.UI;
 using UnityEngine;
 
-namespace CodeSketch.Settings
+namespace SketchEngine.Settings
 {
     public class SettingButton : UIButtonBase
     {

@@ -1,11 +1,11 @@
 ﻿using DG.Tweening;
 using Sirenix.OdinInspector;
 using System;
-using CodeSketch.Mono;
+using SketchEngine.Mono;
 using UnityEngine;
 using UnityEngine.UI;
 
-namespace CodeSketch.Utilities.Animations
+namespace SketchEngine.Utilities.Animations
 {
     public class AnimationSequence : MonoBase
     {

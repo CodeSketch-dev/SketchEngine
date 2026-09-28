@@ -1,8 +1,8 @@
 using System;
 using UnityEngine;
-using CodeSketch.Mono;
+using SketchEngine.Mono;
 
-namespace CodeSketch.Optimize
+namespace SketchEngine.Optimize
 {
     /// <summary>
     /// Base class xử lý va chạm với các object đã register vào OptCollisionLookup theo type T.

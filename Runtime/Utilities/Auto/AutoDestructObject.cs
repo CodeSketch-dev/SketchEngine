@@ -1,9 +1,9 @@
 ﻿using System;
-using CodeSketch.Mono;
+using SketchEngine.Mono;
 using PrimeTween;
 using UnityEngine;
 
-namespace CodeSketch.Utilities.Auto
+namespace SketchEngine.Utilities.Auto
 {
     /// <summary>
     /// This class is created for auto destroy or disable gameobject purpose

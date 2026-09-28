@@ -1,12 +1,12 @@
 using System;
 using System.Collections.Generic;
-using CodeSketch.Core.Extensions;
-using CodeSketch.Core.Extensions.CSharp;
-using CodeSketch.Diagnostics;
+using SketchEngine.Core.Extensions;
+using SketchEngine.Core.Extensions.CSharp;
+using SketchEngine.Diagnostics;
 using UnityEngine;
 using Object = UnityEngine.Object;
 
-namespace CodeSketch.UIPopup
+namespace SketchEngine.UIPopup
 {
     public static class PopupManager
     {

@@ -2,9 +2,9 @@ using System;
 using System.Collections.Generic;
 using System.Globalization;
 using UnityEngine;
-using CodeSketch.Diagnostics;
+using SketchEngine.Diagnostics;
 
-namespace CodeSketch.Utilities.Utils
+namespace SketchEngine.Utilities.Utils
 {
     /// <summary>
     /// Compact number formatting & parsing utilities.

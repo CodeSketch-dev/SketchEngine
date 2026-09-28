@@ -1,6 +1,6 @@
 using UnityEngine;
 
-namespace CodeSketch.UIPopup
+namespace SketchEngine.UIPopup
 {
     public class PopupRootSetter : MonoBehaviour
     {

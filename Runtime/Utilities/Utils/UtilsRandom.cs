@@ -1,7 +1,7 @@
-using CodeSketch.Core;
+using SketchEngine.Core;
 using UnityEngine;
 
-namespace CodeSketch.Utilities.Utils
+namespace SketchEngine.Utilities.Utils
 {
     public static class UtilsRandom
     {

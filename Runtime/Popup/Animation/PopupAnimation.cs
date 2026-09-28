@@ -3,7 +3,7 @@ using Sirenix.OdinInspector;
 using System;
 using UnityEngine;
 
-namespace CodeSketch.UIPopup
+namespace SketchEngine.UIPopup
 {
     [Serializable]
     public class PopupAnimation

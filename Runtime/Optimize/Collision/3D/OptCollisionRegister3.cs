@@ -1,7 +1,7 @@
-using CodeSketch.Mono;
+using SketchEngine.Mono;
 using UnityEngine;
 
-namespace CodeSketch.Optimize
+namespace SketchEngine.Optimize
 {
     /// <summary>
     /// Register một component như ba gameplay type T1, T2, T3 dùng cùng collider set.

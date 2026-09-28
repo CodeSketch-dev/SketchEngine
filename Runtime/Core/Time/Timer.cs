@@ -1,6 +1,6 @@
 using System;
 
-namespace CodeSketch.Core.Time
+namespace SketchEngine.Core.Time
 {
     /// <summary>
     /// Base class for frame-based runtime timers.

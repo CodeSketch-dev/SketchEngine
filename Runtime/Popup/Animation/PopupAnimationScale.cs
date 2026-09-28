@@ -1,7 +1,7 @@
 using DG.Tweening;
 using UnityEngine;
 
-namespace CodeSketch.UIPopup
+namespace SketchEngine.UIPopup
 {
     public class PopupAnimationScale : PopupAnimation
     {

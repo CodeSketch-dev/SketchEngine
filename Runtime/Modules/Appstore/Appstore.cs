@@ -6,7 +6,7 @@ using Cysharp.Threading.Tasks;
 using System.Threading;
 #endif
 
-namespace CodeSketch.AppStore
+namespace SketchEngine.AppStore
 {
     public static class AppStore
     {

@@ -1,4 +1,4 @@
-namespace CodeSketch.Patterns.Observer
+namespace SketchEngine.Patterns.Observer
 {
     /// <summary>
     /// Interface represents and even distributed via <see cref="IEventBus"/>

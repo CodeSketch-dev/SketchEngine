@@ -2,9 +2,9 @@
 using TMPro;
 using UnityEngine;
 
-using CodeSketch.Mono;
+using SketchEngine.Mono;
 
-namespace CodeSketch.Core.Text
+namespace SketchEngine.Core.Text
 {
     [RequireComponent(typeof(TextMeshProUGUI))]
     public class UITextBase : MonoBase

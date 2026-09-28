@@ -1,7 +1,7 @@
 using System;
 using UnityEngine;
 
-namespace CodeSketch.Mono
+namespace SketchEngine.Mono
 {
     public class MonoBase : MonoBehaviour
     {

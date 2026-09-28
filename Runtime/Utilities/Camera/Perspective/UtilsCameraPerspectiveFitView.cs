@@ -1,10 +1,10 @@
 using System;
-using CodeSketch.Core.Extensions;
+using SketchEngine.Core.Extensions;
 using DG.Tweening;
 using Sirenix.OdinInspector;
 using UnityEngine;
 
-namespace CodeSketch.Utilities.CameraSystem
+namespace SketchEngine.Utilities.CameraSystem
 {
     public class UtilsCameraPerspectiveFitView : MonoBehaviour
     {

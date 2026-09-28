@@ -5,7 +5,7 @@ using UnityEngine;
 using UnityEditor;
 #endif
 
-namespace CodeSketch.SO.Editor
+namespace SketchEngine.SO.Editor
 {
     public static class ScriptableObjectHelper
     {

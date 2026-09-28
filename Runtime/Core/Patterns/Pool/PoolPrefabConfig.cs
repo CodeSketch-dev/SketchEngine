@@ -1,6 +1,6 @@
 using UnityEngine;
 
-namespace CodeSketch.Patterns.Pool
+namespace SketchEngine.Patterns.Pool
 {
     [System.Serializable]
     public class PoolPrefabConfig : ScriptableObject

@@ -1,8 +1,8 @@
 using System;
 using System.Globalization;
-using CodeSketch.Utilities.Utils;
+using SketchEngine.Utilities.Utils;
 
-namespace CodeSketch.Number
+namespace SketchEngine.Number
 {
     /// <summary>
     /// BigNumber for idle / incremental games.

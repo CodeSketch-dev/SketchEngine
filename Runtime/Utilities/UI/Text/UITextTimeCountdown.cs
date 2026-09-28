@@ -1,8 +1,8 @@
 using System;
-using CodeSketch.Core.Text;
+using SketchEngine.Core.Text;
 using UnityEngine;
 
-namespace CodeSketch.Utilities.Text
+namespace SketchEngine.Utilities.Text
 {
     public class UITextTimeCountdown : UITextBase
     {

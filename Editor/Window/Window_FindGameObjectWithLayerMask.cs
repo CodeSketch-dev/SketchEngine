@@ -5,7 +5,7 @@ using UnityEditorInternal;
 using UnityEngine;
 using System.IO;
 
-namespace CodeSketch.Editor
+namespace SketchEngine.Editor
 {
     public class Window_FindGameObjectWithLayerMask : EditorWindow
     {

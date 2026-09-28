@@ -1,7 +1,7 @@
 using System;
 using UnityEngine;
 
-namespace CodeSketch.Modules.Lifetime
+namespace SketchEngine.Modules.Lifetime
 {
     public class LifetimeBinding : MonoBehaviour
     {

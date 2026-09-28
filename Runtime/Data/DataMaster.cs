@@ -1,6 +1,6 @@
 using UnityEngine;
 
-namespace CodeSketch.Data
+namespace SketchEngine.Data
 {
     public class DataMaster : DataBlock<DataMaster>
     {

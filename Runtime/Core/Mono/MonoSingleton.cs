@@ -1,8 +1,8 @@
 using System.Threading;
-using CodeSketch.Diagnostics;
+using SketchEngine.Diagnostics;
 using UnityEngine;
 
-namespace CodeSketch.Mono
+namespace SketchEngine.Mono
 {
     /// <summary>
     /// Singleton pattern implementation for MonoBehaviour classes.

@@ -4,7 +4,7 @@ using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
-namespace CodeSketch.Audio
+namespace SketchEngine.Audio
 {
     public class AudioButtonSfx : MonoBehaviour, IPointerDownHandler
     {
