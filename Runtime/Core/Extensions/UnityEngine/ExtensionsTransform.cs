@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using UnityEngine;
 
 namespace SketchEngine.Core.Extensions
@@ -165,9 +164,10 @@ namespace SketchEngine.Core.Extensions
 
         public static void Sort(this Transform transform, Func<Transform, IComparable> sortFunction)
         {
-            var sorted = transform.GetChildren().OrderBy(sortFunction).ToList();
-            for (int i = 0; i < sorted.Count; i++)
-                sorted[i].SetSiblingIndex(i);
+            var children = transform.GetChildren();
+            children.Sort((a, b) => sortFunction(a).CompareTo(sortFunction(b)));
+            for (int i = 0; i < children.Count; i++)
+                children[i].SetSiblingIndex(i);
         }
 
         public static void SortAlphabetically(this Transform transform) => transform.Sort(t => t.name);

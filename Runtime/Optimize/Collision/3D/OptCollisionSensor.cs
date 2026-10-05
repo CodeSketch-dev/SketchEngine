@@ -1,60 +1,104 @@
-using System;
-using UnityEngine;
 using SketchEngine.Mono;
+using UnityEngine;
 
 namespace SketchEngine.Optimize
 {
-    /// <summary>
-    /// Base class xử lý va chạm với các object đã register vào OptCollisionLookup theo type T.
-    /// - Zero GetComponent, zero GC runtime
-    /// - Delegates lazy-cached sau lần collision đầu tiên — không allocate mỗi event
-    /// - Không cần gọi base.Awake()
-    /// </summary>
-    public abstract class OptCollisionSensor<T> : MonoCached
-        where T : class
+    // Sensor không generic: nhận mọi owner đã đăng ký với collider đối phương.
+    // Override hook OnXxxOwner rồi dùng "is" để chọn interface cần xử lý.
+    public abstract class OptCollisionSensor : MonoCached
     {
-        // Lazy-cached on first collision: allocation happens once, never again.
-        // Safe even if subclass does not call base.Awake().
-        Action<T> _cachedCollisionEnter;
-        Action<T> _cachedCollisionExit;
-        Action<T> _cachedTriggerEnter;
-        Action<T> _cachedTriggerExit;
-
-        // ==================== COLLISION ====================
-
         protected virtual void OnCollisionEnter(Collision collision)
         {
-            var col = collision.collider;
-            if (col == null) return;
-            _cachedCollisionEnter ??= OnCollisionEnterFunc;
-            OptCollisionLookup.ForEach<T>(col, _cachedCollisionEnter);
+            if (!OptCollisionLookup.TryGetSlot(collision.collider, out OptSlot slot)) return;
+            OptCollisionLookup.BeginDispatch();
+            try
+            {
+                int n = slot.Count;
+                for (int i = 0; i < n; i++)
+                {
+                    MonoBehaviour owner = slot.Items[i];
+                    if (owner != null) OnCollisionEnterOwner(owner);
+                }
+            }
+            finally { OptCollisionLookup.EndDispatch(); }
         }
 
         protected virtual void OnCollisionExit(Collision collision)
         {
-            var col = collision.collider;
-            if (col == null) return;
-            _cachedCollisionExit ??= OnCollisionExitFunc;
-            OptCollisionLookup.ForEach<T>(col, _cachedCollisionExit);
+            if (!OptCollisionLookup.TryGetSlot(collision.collider, out OptSlot slot)) return;
+            OptCollisionLookup.BeginDispatch();
+            try
+            {
+                int n = slot.Count;
+                for (int i = 0; i < n; i++)
+                {
+                    MonoBehaviour owner = slot.Items[i];
+                    if (owner != null) OnCollisionExitOwner(owner);
+                }
+            }
+            finally { OptCollisionLookup.EndDispatch(); }
         }
-
-        // ==================== TRIGGER ======================
 
         protected virtual void OnTriggerEnter(Collider other)
         {
-            if (other == null) return;
-            _cachedTriggerEnter ??= OnTriggerEnterFunc;
-            OptCollisionLookup.ForEach<T>(other, _cachedTriggerEnter);
+            if (!OptCollisionLookup.TryGetSlot(other, out OptSlot slot)) return;
+            OptCollisionLookup.BeginDispatch();
+            try
+            {
+                int n = slot.Count;
+                for (int i = 0; i < n; i++)
+                {
+                    MonoBehaviour owner = slot.Items[i];
+                    if (owner != null) OnTriggerEnterOwner(owner);
+                }
+            }
+            finally { OptCollisionLookup.EndDispatch(); }
         }
 
         protected virtual void OnTriggerExit(Collider other)
         {
-            if (other == null) return;
-            _cachedTriggerExit ??= OnTriggerExitFunc;
-            OptCollisionLookup.ForEach<T>(other, _cachedTriggerExit);
+            if (!OptCollisionLookup.TryGetSlot(other, out OptSlot slot)) return;
+            OptCollisionLookup.BeginDispatch();
+            try
+            {
+                int n = slot.Count;
+                for (int i = 0; i < n; i++)
+                {
+                    MonoBehaviour owner = slot.Items[i];
+                    if (owner != null) OnTriggerExitOwner(owner);
+                }
+            }
+            finally { OptCollisionLookup.EndDispatch(); }
         }
 
-        // ==================== GAMEPLAY CALLBACKS ============
+        protected virtual void OnCollisionEnterOwner(MonoBehaviour owner) { }
+        protected virtual void OnCollisionExitOwner(MonoBehaviour owner) { }
+        protected virtual void OnTriggerEnterOwner(MonoBehaviour owner) { }
+        protected virtual void OnTriggerExitOwner(MonoBehaviour owner) { }
+    }
+
+    // Sensor chỉ quan tâm một kiểu T: lọc owner bằng "is T" trước khi gọi hook.
+    public abstract class OptCollisionSensor<T> : OptCollisionSensor where T : class
+    {
+        protected sealed override void OnCollisionEnterOwner(MonoBehaviour owner)
+        {
+            if (owner is T target) OnCollisionEnterFunc(target);
+        }
+
+        protected sealed override void OnCollisionExitOwner(MonoBehaviour owner)
+        {
+            if (owner is T target) OnCollisionExitFunc(target);
+        }
+
+        protected sealed override void OnTriggerEnterOwner(MonoBehaviour owner)
+        {
+            if (owner is T target) OnTriggerEnterFunc(target);
+        }
+
+        protected sealed override void OnTriggerExitOwner(MonoBehaviour owner)
+        {
+            if (owner is T target) OnTriggerExitFunc(target);
+        }
 
         protected virtual void OnCollisionEnterFunc(T target) { }
         protected virtual void OnCollisionExitFunc(T target) { }

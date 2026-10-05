@@ -4,19 +4,15 @@ using UnityEngine;
 namespace SketchEngine.Optimize
 {
     /// <summary>
-    /// Base class:
-    /// - Auto register colliders to OptCollisionLookup
-    /// - T = interface / base gameplay type that the concrete subclass implements
-    /// - Zero GetComponent in runtime
+    /// Kế thừa class này rồi implement bất kỳ số interface nào (ICharacterCollidable, IMonsterCollidable, ...).
+    /// Object tự đăng ký collider vào bảng chung lúc bật, và tự gỡ lúc tắt. Không generic, không giới hạn số type.
     /// </summary>
-    public abstract class OptCollisionRegister<T> : MonoCached where T : class
+    public abstract class OptCollisionRegister : MonoCached
     {
         [SerializeField] protected Collider[] _colliders;
         [SerializeField] protected bool _manuallyAssignColliders = false;
 
-        // =====================================================
-        // LIFECYCLE
-        // =====================================================
+        int[] _colliderIds;
 
         protected virtual void Awake()
         {
@@ -27,13 +23,12 @@ namespace SketchEngine.Optimize
         protected virtual void OnEnable()
         {
             if (_colliders == null || _colliders.Length == 0) return;
-            OptCollisionLookup.Register<T>((T)(object)this, _colliders);
+            _colliderIds = OptCollisionLookup.Register(this, _colliders, _colliderIds);
         }
 
         protected virtual void OnDisable()
         {
-            if (_colliders == null || _colliders.Length == 0) return;
-            OptCollisionLookup.Unregister<T>((T)(object)this, _colliders);
+            OptCollisionLookup.Unregister(this, _colliderIds);
         }
 
         protected virtual void OnValidate()

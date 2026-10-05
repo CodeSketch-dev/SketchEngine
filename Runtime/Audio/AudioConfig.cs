@@ -7,9 +7,9 @@ namespace SketchEngine.Audio
     public class AudioConfig : ScriptableObject
     {
         [SerializeField] AudioClip _clip;
-        [SerializeField] AudioType _type;
+        [SerializeField] SketchAudioType _type;
         
-        [ShowIf("@_type == AudioType.Sound")]
+        [ShowIf("@_type == SketchAudioType.Sound")]
         [SerializeField] AudioMode _mode = AudioMode.Mode2D;
 
         [ShowIf("@_mode == AudioMode.Mode3D")]
@@ -22,7 +22,7 @@ namespace SketchEngine.Audio
         [SerializeField] AudioBus _bus = AudioBus.Master;
 
         public AudioClip Clip => _clip;
-        public AudioType Type => _type;
+        public SketchAudioType Type => _type;
         public AudioMode Mode => _mode;
         public Vector2 EarsDistance => _earsDistance;
         public float Volume => _volume;

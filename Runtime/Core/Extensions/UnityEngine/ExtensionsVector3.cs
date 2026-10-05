@@ -114,7 +114,7 @@ namespace SketchEngine.Core.Extensions
                 Random.Range(-v.z, v.z));
         }
         
-        // So sánh gần đúng giữa 2 Vector2
+        // So sánh gần đúng giữa 2 Vector3
         public static bool Approximately(this Vector3 a, Vector3 b, float tolerance)
         {
             return (a - b).sqrMagnitude <= tolerance * tolerance;

@@ -49,9 +49,9 @@ namespace SketchEngine.Core.Extensions
         /// </summary>
         public static void GetUVs(this Sprite sprite, ref Vector2 uv0, ref Vector2 uvSize)
         {
-            if (sprite == null)
+            if (sprite == null || sprite.texture == null)
             {
-                CodeSketchDebug.LogError("Can't get uvs, sprite is null");
+                SketchDebug.LogError("Can't get uvs, sprite or its texture is null");
                 return;
             }
 

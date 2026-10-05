@@ -18,7 +18,7 @@ namespace SketchEngine.Utilities.Animations
 
         protected override Tween GetTween(AnimationSequence animationSequence)
         {
-            Graphic owner = _isSelf ? animationSequence.graphic : _owner;
+            Graphic owner = _isSelf ? animationSequence.Graphic : _owner;
 
             float duration = _isSpeedBased ? Mathf.Abs(_value.Magnitude() - owner.color.Magnitude()) / _duration : _duration;
             Color start = _changeStartValue ? _valueStart : owner.color;
@@ -34,7 +34,7 @@ namespace SketchEngine.Utilities.Animations
 
         protected override Tween GetResetTween(AnimationSequence animationSequence)
         {
-            Graphic owner = _isSelf ? animationSequence.graphic : _owner;
+            Graphic owner = _isSelf ? animationSequence.Graphic : _owner;
 
             return owner.DOColor(owner.color, 0.0f);
         }

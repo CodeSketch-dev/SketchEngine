@@ -4,6 +4,7 @@
     "references": [
         "SketchEngine",
         "SketchEngine.Data",
+        "OdinSerializer",
         "Unity.TextMeshPro",
         "PrimeTween.Runtime",
         "DOTween.Modules"

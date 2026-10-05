@@ -7,6 +7,9 @@ namespace SketchEngine.Core.Extensions
     /// </summary>
     public static class ExtensionsRectTransform
     {
+        // Mảng dùng chung để lấy góc, tránh cấp phát mỗi lần gọi. Chỉ dùng trên main thread.
+        static readonly Vector3[] s_corners = new Vector3[4];
+
         /// <summary>Set chiều rộng của RectTransform theo Anchor hiện tại.</summary>
         public static void SetWidth(this RectTransform rectTransform, float width)
         {
@@ -62,7 +65,7 @@ namespace SketchEngine.Core.Extensions
         /// <summary>Trả về tỷ lệ pixel trên mỗi đơn vị thế giới (pixel per unit).</summary>
         public static float GetPixelPerUnit(this RectTransform rectTransform)
         {
-            Vector3[] corners = new Vector3[4];
+            Vector3[] corners = s_corners;
             rectTransform.GetWorldCorners(corners);
             return rectTransform.rect.width / (corners[2].x - corners[0].x);
         }
@@ -70,7 +73,7 @@ namespace SketchEngine.Core.Extensions
         /// <summary>Trả về tỷ lệ đơn vị thế giới trên mỗi pixel.</summary>
         public static float GetUnitPerPixel(this RectTransform rectTransform)
         {
-            Vector3[] corners = new Vector3[4];
+            Vector3[] corners = s_corners;
             rectTransform.GetWorldCorners(corners);
             return (corners[2].x - corners[0].x) / rectTransform.rect.width;
         }
@@ -128,7 +131,7 @@ namespace SketchEngine.Core.Extensions
         /// <summary>Trả về vị trí góc dưới trái trong thế giới.</summary>
         public static Vector3 GetWorldBottomLeft(this RectTransform rectTransform)
         {
-            Vector3[] corners = new Vector3[4];
+            Vector3[] corners = s_corners;
             rectTransform.GetWorldCorners(corners);
             return corners[0];
         }
@@ -136,7 +139,7 @@ namespace SketchEngine.Core.Extensions
         /// <summary>Trả về vị trí góc trên phải trong thế giới.</summary>
         public static Vector3 GetWorldTopRight(this RectTransform rectTransform)
         {
-            Vector3[] corners = new Vector3[4];
+            Vector3[] corners = s_corners;
             rectTransform.GetWorldCorners(corners);
             return corners[2];
         }
@@ -152,13 +155,19 @@ namespace SketchEngine.Core.Extensions
             if (camera == null)
                 camera = Camera.main;
 
-            Vector2[] scrPoints = new Vector2[4];
-            scrPoints[0] = camera.WorldToScreenPoint(bounds.min);
-            scrPoints[1] = camera.WorldToScreenPoint(new Vector2(bounds.min.x, bounds.max.y));
-            scrPoints[2] = camera.WorldToScreenPoint(bounds.max);
-            scrPoints[3] = camera.WorldToScreenPoint(new Vector2(bounds.max.x, bounds.min.y));
+            // Dùng Vector3 để giữ đúng Z khi chiếu lên màn hình (Vector2 sẽ làm Z = 0 sai).
+            // Các góc chiếu ở cùng độ sâu (tâm bounds) để hình chữ nhật trên màn hình đúng.
+            Vector3 min = bounds.min;
+            Vector3 max = bounds.max;
+            float z = bounds.center.z;
 
-            rectTransform.SetWorldCorners(scrPoints);
+            var screenCorners = new Vector2[4];
+            screenCorners[0] = camera.WorldToScreenPoint(new Vector3(min.x, min.y, z));
+            screenCorners[1] = camera.WorldToScreenPoint(new Vector3(min.x, max.y, z));
+            screenCorners[2] = camera.WorldToScreenPoint(new Vector3(max.x, max.y, z));
+            screenCorners[3] = camera.WorldToScreenPoint(new Vector3(max.x, min.y, z));
+
+            rectTransform.SetWorldCorners(screenCorners);
         }
     }
 }

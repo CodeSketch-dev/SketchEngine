@@ -6,36 +6,22 @@ namespace SketchEngine.Utilities.Text
 {
     public class UITextTimeCountdown : UITextBase
     {
-        [Header("Config")]
-        [SerializeField] bool _unscaledTime = true;
+        [SerializeField] bool _useUnscaledTime = true;
 
         float _timeRemain;
-        
+
         public event Action EventTimeUp;
         public float TimeRemain => _timeRemain;
-        
+
         #region MonoBehaviour
 
-        protected override void Tick()
+        void Update()
         {
-            base.Tick();
-            
-            _timeRemain -= _unscaledTime ? Time.unscaledDeltaTime : Time.deltaTime;
-
-            if (_timeRemain <= 0.0f)
-            {
-                _timeRemain = 0.0f;
-
-                SetEnabled(false);
-                UpdateTimeDisplay(_timeRemain);
-                EventTimeUp?.Invoke();
-            }
-
-            UpdateTimeDisplay(_timeRemain);
+            Tick();
         }
 
         #endregion
-        
+
         #region Public
 
         public void Init(float timeLeft)
@@ -51,6 +37,25 @@ namespace SketchEngine.Utilities.Text
         {
             enabled = isEnabled;
         }
+
+        public override void Tick()
+        {
+            base.Tick();
+
+            _timeRemain -= _useUnscaledTime ? Time.unscaledDeltaTime : Time.deltaTime;
+
+            if (_timeRemain <= 0.0f)
+            {
+                _timeRemain = 0.0f;
+
+                SetEnabled(false);
+                UpdateTimeDisplay(_timeRemain);
+                EventTimeUp?.Invoke();
+            }
+
+            UpdateTimeDisplay(_timeRemain);
+        }
+
 
         #endregion
 

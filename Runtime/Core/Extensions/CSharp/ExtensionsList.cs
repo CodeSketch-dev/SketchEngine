@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using UnityEngine;
 using Random = System.Random;
 
@@ -20,7 +19,8 @@ namespace SketchEngine.Core.Extensions.CSharp
                 if (newSize > list.Capacity)
                     list.Capacity = newSize;
 
-                list.AddRange(Enumerable.Repeat(defaultValue, newSize - currentSize));
+                for (int i = currentSize; i < newSize; i++)
+                    list.Add(defaultValue);
             }
         }
 
@@ -63,7 +63,10 @@ namespace SketchEngine.Core.Extensions.CSharp
 
         public static List<T> Clone<T>(this List<T> list) where T : ICloneable
         {
-            return list.Select(item => (T)item.Clone()).ToList();
+            var result = new List<T>(list.Count);
+            for (int i = 0; i < list.Count; i++)
+                result.Add((T)list[i].Clone());
+            return result;
         }
 
         public static T Last<T>(this List<T> list)
@@ -109,7 +112,7 @@ namespace SketchEngine.Core.Extensions.CSharp
             if (list.Count <= 0)
                 return null;
 
-            T result = list.Last();
+            T result = list[list.Count - 1];
             list.RemoveAt(list.Count - 1);
             return result;
         }

@@ -15,7 +15,7 @@ namespace SketchEngine.Core.Extensions
         )
         {
             // Log thông tin dòng, tên phương thức và file path
-            CodeSketchDebug.Log($"{line} :: {memberName} :: {filePath}", context, Color.cyan);
+            SketchDebug.Log($"{line} :: {memberName} :: {filePath}", context, Color.cyan);
         }
     }
 }

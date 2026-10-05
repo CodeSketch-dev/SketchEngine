@@ -7,8 +7,10 @@ using System.IO;
 
 namespace SketchEngine.Editor
 {
-    public class Window_FindGameObjectWithLayerMask : EditorWindow
+    public class Window_FindGameObjectWithLayerMask : SketchToolTab
     {
+        public override string Title => "Layer Finder";
+
         enum SearchScope
         {
             Scene,
@@ -24,13 +26,7 @@ namespace SketchEngine.Editor
         ReorderableList reorderableList;
         Vector2 scrollPos;
 
-        [MenuItem("CodeSketch/Tools/Window/Find GameObject With Layer")]
-        public static void ShowWindow()
-        {
-            GetWindow<Window_FindGameObjectWithLayerMask>("Layer Finder");
-        }
-
-        void OnEnable()
+        public override void OnEnable()
         {
             reorderableList = new ReorderableList(foundObjects, typeof(GameObject), true, true, false, false)
             {
@@ -50,7 +46,7 @@ namespace SketchEngine.Editor
             };
         }
 
-        void OnGUI()
+        public override void OnGUI()
         {
             GUILayout.Label("Layer Finder", EditorStyles.boldLabel);
             GUILayout.Space(4);
@@ -157,11 +153,12 @@ namespace SketchEngine.Editor
 
         void FindInScene(int layer)
         {
-            var sceneObjects = FindObjectsOfType<GameObject>(true);
-            foreach (var obj in sceneObjects)
+            // GameObject không phải Component nên FindObjectsByType<GameObject> không tìm được gì; quét qua Transform.
+            Transform[] transforms = Object.FindObjectsByType<Transform>(FindObjectsInactive.Include, FindObjectsSortMode.None);
+            foreach (var t in transforms)
             {
-                if (obj.layer == layer)
-                    foundObjects.Add(obj);
+                if (t.gameObject.layer == layer)
+                    foundObjects.Add(t.gameObject);
             }
         }
 

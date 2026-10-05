@@ -1,122 +1,195 @@
 ﻿using Sirenix.OdinInspector;
 using UnityEngine;
-
 using SketchEngine.Diagnostics;
 
 namespace SketchEngine.Utilities.UI
 {
     /// <summary>
-    /// Safe area implementation for notched mobile devices. Usage:
-    ///  (1) Add this component to the top level of any GUI panel. 
-    ///  (2) If the panel uses a full screen background image, then create an immediate child and put the component on that instead, with all other elements childed below it.
-    ///      This will allow the background image to stretch to the full extents of the screen behind the notch, which looks nicer.
-    ///  (3) For other cases that use a mixture of full horizontal and vertical background stripes, use the Conform X & Y controls on separate elements as needed.
+    /// Điều chỉnh anchor của panel theo vùng an toàn trên thiết bị có tai thỏ.
+    /// Panel cha cần phủ toàn màn hình; giữ nguyên offset như cách hoạt động ban đầu.
+    /// Để nội dung khớp vùng an toàn, đặt offset của panel bằng 0 trong Inspector.
+    /// Đặt ảnh nền toàn màn hình bên ngoài panel này và các phần tử nội dung bên trong.
+    /// Tắt Conform trên một trục để anchor trải hết màn hình theo trục đó.
     /// </summary>
+    [RequireComponent(typeof(RectTransform))]
+    [DisallowMultipleComponent]
     public class UISafeArea : MonoBehaviour
     {
         [Title("Config")]
-        [SerializeField] bool _conformX = true;  // Conform to screen safe area on X-axis (default true, disable to ignore)
-        [SerializeField] bool _conformY = true;  // Conform to screen safe area on Y-axis (default true, disable to ignore)
+        [SerializeField] bool _conformX = true; // Áp dụng vùng an toàn trên trục X.
+        [SerializeField] bool _conformY = true; // Áp dụng vùng an toàn trên trục Y.
 
         [Space]
+        [SerializeField] bool _logging = false; // Ghi log sau khi áp dụng vùng an toàn.
 
-        [SerializeField] bool _refreshOnUpdate = false;
-
-        [Space]
-
-        [SerializeField] bool _logging = false;  // Conform to screen safe area on Y-axis (default true, disable to ignore)
-
-        RectTransform _rectTransform;
-
-        Rect _lastSafeArea = new Rect(0, 0, 0, 0);
-
-        Vector2Int _lastScreenSize = new Vector2Int(0, 0);
-
-        ScreenOrientation _lastOrientation = ScreenOrientation.AutoRotation;
-
-        RectTransform rectTransform
+        /// <summary>
+        /// Thiết bị mô phỏng trong Editor, tương ứng với Safe Area Helper của Crystal Pug.
+        /// </summary>
+        public enum SimDevice
         {
-            get
-            {
-                if (_rectTransform == null)
-                    _rectTransform = GetComponent<RectTransform>();
-
-                return _rectTransform;
-            }
+            None,
+            iPhoneX,
+            iPhoneXsMax,
+            Pixel3XL_LSL,
+            Pixel3XL_LSR
         }
 
+        /// <summary>
+        /// Chọn thiết bị mô phỏng cho tất cả UISafeArea; không ảnh hưởng bản build.
+        /// Để None khi dùng Unity Device Simulator để lấy vùng an toàn của thiết bị đang chọn.
+        /// </summary>
+        public static SimDevice Sim = SimDevice.None;
+
+#if UNITY_EDITOR
+        // Mỗi bảng gồm vùng an toàn chuẩn hóa cho màn hình dọc và ngang.
+        // Giữ nguyên dữ liệu và ánh xạ hướng từ bản Crystal Pug được import.
+        static readonly Rect[] NSA_iPhoneX =
+        {
+            new Rect(0f, 102f / 2436f, 1f, 2202f / 2436f),
+            new Rect(132f / 2436f, 63f / 1125f, 2172f / 2436f, 1062f / 1125f)
+        };
+
+        static readonly Rect[] NSA_iPhoneXsMax =
+        {
+            new Rect(0f, 102f / 2688f, 1f, 2454f / 2688f),
+            new Rect(132f / 2688f, 63f / 1242f, 2424f / 2688f, 1179f / 1242f)
+        };
+
+        static readonly Rect[] NSA_Pixel3XL_LSL =
+        {
+            new Rect(0f, 0f, 1f, 2789f / 2960f),
+            new Rect(0f, 0f, 2789f / 2960f, 1f)
+        };
+
+        static readonly Rect[] NSA_Pixel3XL_LSR =
+        {
+            new Rect(0f, 0f, 1f, 2789f / 2960f),
+            new Rect(171f / 2960f, 0f, 2789f / 2960f, 1f)
+        };
+#endif
+
+        RectTransform _rectTransform;
+        Rect _lastSafeArea;
+        Vector2Int _lastScreenSize;
+        ScreenOrientation _lastOrientation;
+        bool _lastConformX;
+        bool _lastConformY;
+        bool _hasApplied;
+
         void OnEnable()
+        {
+            _rectTransform = GetComponent<RectTransform>();
+            _hasApplied = false;
+            Refresh();
+        }
+
+        void LateUpdate()
         {
             Refresh();
         }
 
-         void Update()
-        {
-            if (_refreshOnUpdate)
-                Refresh();
-        }
-
         void Refresh()
         {
-            Rect safeArea = Screen.safeArea;
+            Rect safeArea = GetSafeArea();
+            int width = Screen.width;
+            int height = Screen.height;
+            ScreenOrientation orientation = Screen.orientation;
 
-            if (safeArea != _lastSafeArea
-                || Screen.width != _lastScreenSize.x
-                || Screen.height != _lastScreenSize.y
-                || Screen.orientation != _lastOrientation)
-            {
-                // Fix for having auto-rotate off and manually forcing a screen orientation.
-                // See https://forum.unity.com/threads/569236/#post-4473253 and https://forum.unity.com/threads/569236/page-2#post-5166467
-                _lastScreenSize.x = Screen.width;
-                _lastScreenSize.y = Screen.height;
-                _lastOrientation = Screen.orientation;
+            if (_hasApplied && safeArea == _lastSafeArea
+                && width == _lastScreenSize.x && height == _lastScreenSize.y
+                && orientation == _lastOrientation
+                && _conformX == _lastConformX && _conformY == _lastConformY)
+                return;
 
-                ApplySafeArea(safeArea);
-            }
+            if (!ApplySafeArea(safeArea, width, height))
+                return;
+
+            // Chỉ lưu trạng thái sau khi áp dụng thành công để dữ liệu lỗi được thử lại.
+            _lastSafeArea = safeArea;
+            _lastScreenSize = new Vector2Int(width, height);
+            _lastOrientation = orientation;
+            _lastConformX = _conformX;
+            _lastConformY = _conformY;
+            _hasApplied = true;
         }
 
-        void ApplySafeArea(Rect r)
+        Rect GetSafeArea()
         {
-            _lastSafeArea = r;
+            Rect safeArea = Screen.safeArea;
+#if UNITY_EDITOR
+            if (Sim != SimDevice.None)
+            {
+                int index = Screen.height > Screen.width ? 0 : 1;
+                Rect normalizedArea;
+                switch (Sim)
+                {
+                    case SimDevice.iPhoneX:
+                        normalizedArea = NSA_iPhoneX[index];
+                        break;
+                    case SimDevice.iPhoneXsMax:
+                        normalizedArea = NSA_iPhoneXsMax[index];
+                        break;
+                    case SimDevice.Pixel3XL_LSL:
+                        normalizedArea = NSA_Pixel3XL_LSL[index];
+                        break;
+                    case SimDevice.Pixel3XL_LSR:
+                        normalizedArea = NSA_Pixel3XL_LSR[index];
+                        break;
+                    default:
+                        return safeArea;
+                }
 
-            // Ignore x-axis?
+                safeArea = new Rect(
+                    Screen.width * normalizedArea.x, Screen.height * normalizedArea.y,
+                    Screen.width * normalizedArea.width, Screen.height * normalizedArea.height);
+            }
+#endif
+            return safeArea;
+        }
+
+        bool ApplySafeArea(Rect area, int width, int height)
+        {
+            if (_rectTransform == null || width <= 0 || height <= 0
+                || !IsFinite(area.xMin) || !IsFinite(area.yMin)
+                || !IsFinite(area.xMax) || !IsFinite(area.yMax)
+                || area.width <= 0 || area.height <= 0)
+                return false;
+
+            // Giữ cách xử lý gốc: trục không áp dụng vùng an toàn trải hết màn hình.
             if (!_conformX)
             {
-                r.x = 0;
-                r.width = Screen.width;
+                area.x = 0;
+                area.width = width;
             }
 
-            // Ignore y-axis?
             if (!_conformY)
             {
-                r.y = 0;
-                r.height = Screen.height;
+                area.y = 0;
+                area.height = height;
             }
 
-            // Check for invalid screen startup state on some Samsung devices (see below)
-            if (Screen.width > 0 && Screen.height > 0)
-            {
-                // Convert safe area rectangle from absolute pixels to normalised anchor coordinates
-                Vector2 anchorMin = r.position;
-                Vector2 anchorMax = r.position + r.size;
-                anchorMin.x /= Screen.width;
-                anchorMin.y /= Screen.height;
-                anchorMax.x /= Screen.width;
-                anchorMax.y /= Screen.height;
+            Vector2 anchorMin = new Vector2(area.xMin / width, area.yMin / height);
+            Vector2 anchorMax = new Vector2(area.xMax / width, area.yMax / height);
+            if (!IsFinite(anchorMin.x) || !IsFinite(anchorMin.y)
+                || !IsFinite(anchorMax.x) || !IsFinite(anchorMax.y)
+                || anchorMin.x < 0 || anchorMin.y < 0
+                || anchorMax.x < anchorMin.x || anchorMax.y < anchorMin.y
+                || anchorMax.x > 1 || anchorMax.y > 1)
+                return false;
 
-                // Fix for some Samsung devices (e.g. Note 10+, A71, S20) where Refresh gets called twice and the first time returns NaN anchor coordinates
-                // See https://forum.unity.com/threads/569236/page-2#post-6199352
-                if (anchorMin.x >= 0 && anchorMin.y >= 0 && anchorMax.x >= 0 && anchorMax.y >= 0)
-                {
-                    rectTransform.anchorMin = anchorMin;
-                    rectTransform.anchorMax = anchorMax;
-                }
-            }
+            // Chỉ đổi anchor, giữ nguyên offset và pivot của panel như script ban đầu.
+            _rectTransform.anchorMin = anchorMin;
+            _rectTransform.anchorMax = anchorMax;
 
             if (_logging)
-            {
-                CodeSketchDebug.Log<UISafeArea>($"New safe area applied to {name}: x={r.x}, y={r.y}, w={r.width}, h={r.height} on full extents w={Screen.width}, h={Screen.height}", Color.cyan);
-            }
+                SketchDebug.Log<UISafeArea>($"Đã áp dụng vùng an toàn cho {name}: {area}", Color.cyan);
+
+            return true;
+        }
+
+        static bool IsFinite(float value)
+        {
+            return !float.IsNaN(value) && !float.IsInfinity(value);
         }
     }
 }

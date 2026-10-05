@@ -1,7 +1,7 @@
 using System;
 using UnityEngine;
 
-#if CODESKETCH_NOTIFICATIONS && UNITY_ANDROID
+#if SKETCHENGINE_NOTIFICATIONS && UNITY_ANDROID
 using Unity.Notifications.Android;
 using UnityEngine.Android;
 #endif
@@ -10,7 +10,7 @@ namespace Game
 {
     public class NotificationsAndroid : MonoBehaviour
     {
-#if CODESKETCH_NOTIFICATIONS && UNITY_ANDROID
+#if SKETCHENGINE_NOTIFICATIONS && UNITY_ANDROID
         const string CHANNEL_ID = "default_channel";
 #endif
 
@@ -20,7 +20,7 @@ namespace Game
 
         public void Initialize()
         {
-#if CODESKETCH_NOTIFICATIONS && UNITY_ANDROID
+#if SKETCHENGINE_NOTIFICATIONS && UNITY_ANDROID
             RequestAuthorization();
             RegisterChannel();
 #endif
@@ -29,7 +29,7 @@ namespace Game
 
         public void Send(string identifier, string title, string body, int delaySeconds)
         {
-#if CODESKETCH_NOTIFICATIONS && UNITY_ANDROID
+#if SKETCHENGINE_NOTIFICATIONS && UNITY_ANDROID
             var notification = new AndroidNotification
             {
                 Title = title,
@@ -45,12 +45,12 @@ namespace Game
                 identifier.GetHashCode()
             );
 #endif
-            // noop nếu không bật CODESKETCH_NOTIFICATIONS
+            // noop nếu không bật SKETCHENGINE_NOTIFICATIONS
         }
 
         public void Cancel(string identifier)
         {
-#if CODESKETCH_NOTIFICATIONS && UNITY_ANDROID
+#if SKETCHENGINE_NOTIFICATIONS && UNITY_ANDROID
             AndroidNotificationCenter.CancelNotification(identifier.GetHashCode());
 #endif
             // noop nếu không bật define
@@ -60,7 +60,7 @@ namespace Game
         // ANDROID IMPLEMENTATION
         // =====================================================
 
-#if CODESKETCH_NOTIFICATIONS && UNITY_ANDROID
+#if SKETCHENGINE_NOTIFICATIONS && UNITY_ANDROID
         void RequestAuthorization()
         {
             if (!Permission.HasUserAuthorizedPermission(

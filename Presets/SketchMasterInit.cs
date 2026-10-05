@@ -48,7 +48,7 @@ namespace SketchEngine.Preset
         static void InitSRDebug()
         {
             SRDebug.Init();
-            SRDebug.Instance.PanelVisibilityChanged += (isVisible) => { if (!isVisible && CodeSketchFactory.PopupDebug != null) PopupManager.Create(CodeSketchFactory.PopupDebug); };
+            SRDebug.Instance.PanelVisibilityChanged += (isVisible) => { if (!isVisible && SketchEngineFactory.PopupDebug != null) PopupManager.Create(SketchEngineFactory.PopupDebug); };
         }
 
         #endregion

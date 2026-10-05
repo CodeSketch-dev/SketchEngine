@@ -95,7 +95,7 @@ namespace SketchEngine.Core.Extensions
             return v.x <= v.y;
         }
         
-        // So sánh gần đúng giữa 2 Vector2
+        // So sánh gần đúng giữa 2 Vector2Int
         public static bool Approximately(this Vector2Int a, Vector2Int b, float tolerance)
         {
             return (a - b).sqrMagnitude <= tolerance * tolerance;

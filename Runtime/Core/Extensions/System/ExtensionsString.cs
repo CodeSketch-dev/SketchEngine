@@ -1,45 +1,48 @@
 using System.Runtime.CompilerServices;
 using UnityEngine;
 
-namespace SketchEngine.Core.Extensions.mSystem
+namespace SketchEngine.Core.Extensions
 {
-    public static class ExtensionsString 
+    // Helper rich text cho TextMeshPro. Dùng với "text".SetColor(...).ToBold() ...
+    public static class ExtensionsString
     {
         public static string RemoveQuotes(this string str)
         {
             if (string.IsNullOrEmpty(str)) return str;
 
-            if (str.StartsWith("\"") && str.EndsWith("\""))
-            {
+            if (str.Length >= 2 && str[0] == '"' && str[str.Length - 1] == '"')
                 return str.Substring(1, str.Length - 2);
-            }
 
             return str;
         }
-        
+
+        // hex không có dấu '#', vd "FF0000"
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static string SetColor(this string text, string color) { return $"<color=#{color}>{text}</color>"; }
+        public static string SetColor(this string text, string hex) => $"<color=#{hex}>{text}</color>";
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static string SetColor(this string text, UnityEngine.Color color) { return $"<color={ToHtmlStringRGBA(color)}>{text}</color>"; }
+        public static string SetColor(this string text, Color color) => $"<color={ToHtmlStringRGBA(color)}>{text}</color>";
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static string SetSize(this string text, int size) { return $"<size={size}>{text}</size>"; }
+        public static string SetSize(this string text, int size) => $"<size={size}>{text}</size>";
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static string ToBold(this string text) { return $"<b>{text}</b>"; }
+        public static string ToBold(this string text) => $"<b>{text}</b>";
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static string ToItalic(this string text) { return $"<i>{text}</i>"; }
+        public static string ToItalic(this string text) => $"<i>{text}</i>";
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static string ToUnderline(this string text) => $"<u>{text}</u>";
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static string ToStrikethrough(this string text) => $"<s>{text}</s>";
+
+        // Color -> Color32 tự clamp về 0-255 trong Unity, không cần tự làm tròn.
         static string ToHtmlStringRGBA(Color color)
         {
-            var color32 = new Color32((byte)Mathf.Clamp(Mathf.RoundToInt(color.r * byte.MaxValue), 0, byte.MaxValue),
-                (byte)Mathf.Clamp(Mathf.RoundToInt(color.g * byte.MaxValue), 0, byte.MaxValue),
-                (byte)Mathf.Clamp(Mathf.RoundToInt(color.b * byte.MaxValue), 0, byte.MaxValue),
-                (byte)Mathf.Clamp(Mathf.RoundToInt(color.a * byte.MaxValue), 0, byte.MaxValue));
-
-            return $"#{color32.r:X2}{color32.g:X2}{color32.b:X2}{color32.a:X2}";
+            Color32 c = color;
+            return $"#{c.r:X2}{c.g:X2}{c.b:X2}{c.a:X2}";
         }
     }
 }

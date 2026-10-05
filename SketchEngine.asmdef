@@ -10,7 +10,8 @@
         "Taptic",
         "StompyRobot.SRDebugger",
         "PrimeTween.Runtime",
-        "DOTween.Modules"
+        "DOTween.Modules",
+        "Vertx.Debugging.Runtime"
     ],
     "includePlatforms": [],
     "excludePlatforms": [],

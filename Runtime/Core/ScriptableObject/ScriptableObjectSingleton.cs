@@ -6,7 +6,7 @@ namespace SketchEngine.SO
 {
     public abstract class ScriptableObjectSingleton<T> : ScriptableObject where T : ScriptableObject
     {
-        static string s_rootFolderName => "CodeSketch/ScriptableObjectSingletons";
+        static string s_rootFolderName => "SketchEngine/ScriptableObjectSingletons";
         
         static T s_instance = null;
         

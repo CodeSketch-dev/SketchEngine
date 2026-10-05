@@ -5,7 +5,7 @@ using UnityEngine.UI;
 
 namespace SketchEngine.Core.UI
 {
-    public class UIButtonBase : MonoBase
+    public class UIButtonBase : MonoCached
     {
         [SerializeField, HideInInspector] Button _button;
 
@@ -13,7 +13,7 @@ namespace SketchEngine.Core.UI
         {
             get
             {
-                if(_button == null)
+                if (_button == null)
                     _button = GetComponentInChildren<Button>(false);
 
                 return _button;

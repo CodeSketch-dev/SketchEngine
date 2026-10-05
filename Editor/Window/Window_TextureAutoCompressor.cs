@@ -1,79 +1,91 @@
 #if UNITY_EDITOR
-using UnityEngine;
+using System;
+using System.Collections.Generic;
 using UnityEditor;
 using UnityEditorInternal;
-using System.Collections.Generic;
+using UnityEngine;
 
 namespace SketchEngine.Editor
 {
-    public class Window_TextureAutoCompressor : EditorWindow
+    public class Window_TextureAutoCompressor : SketchToolTab
     {
+        // Mức nén: càng về cuối block ASTC càng lớn -> nén càng mạnh, chất lượng càng thấp.
+        public enum CompressionLevel
+        {
+            Astc4x4,
+            Astc6x6,
+            Astc8x8,
+            Astc10x10,
+            Astc12x12,
+            Uncompressed
+        }
+
+        static readonly string[] CompressionLabels =
+        {
+            "ASTC 4x4 - nén ít nhất (chất lượng cao)",
+            "ASTC 6x6 - cân bằng",
+            "ASTC 8x8 - nén nhiều",
+            "ASTC 10x10 - nén mạnh",
+            "ASTC 12x12 - nén mạnh nhất",
+            "Không nén (RGBA32)"
+        };
+
+        static readonly string[] MaxSizeOptions = { "Auto", "32", "64", "128", "256", "512", "1024", "2048" };
+
+        public override string Title => "Texture Auto Compressor";
+
+        const CompressionLevel DefaultLevel = CompressionLevel.Astc4x4;
+
         readonly List<TextureEntry> _textureEntries = new List<TextureEntry>();
+        ReorderableList _reorderableList;
 
         DefaultAsset _folderAsset;
         bool _applyAndroidOverride = true;
         bool _applyIOSOverride = true;
 
-        readonly string[] _compressionOptions = { "None", "Low", "Normal", "High" };
-        readonly string[] _maxSizeOptions = { "Auto", "32", "64", "128", "256", "512", "1024", "2048" };
-
-        ReorderableList _reorderableList;
-
-        bool _globalGenerateMipMaps = false;
+        bool _globalGenerateMipMaps;
         bool _globalAlphaIsTransparency = true;
-        bool _useLowForAutoSize = false;
+        bool _useLowForAutoSize;
 
         Vector2 _scrollPos;
 
-        // =====================================================
-        // MENU
-        // =====================================================
-
-        [MenuItem("CodeSketch/Tools/Texture/Texture Auto Compressor")]
-        public static void ShowWindow()
-        {
-            GetWindow<Window_TextureAutoCompressor>("Texture Auto Compressor");
-        }
-
-        void OnEnable()
+        public override void OnEnable()
         {
             CreateList();
         }
 
         void CreateList()
         {
-            _reorderableList = new ReorderableList(
-                _textureEntries,
-                typeof(TextureEntry),
-                true, true, false, false
-            );
-
-            _reorderableList.drawElementCallback = DrawTextureEntry;
-            _reorderableList.drawHeaderCallback = rect =>
+            _reorderableList = new ReorderableList(_textureEntries, typeof(TextureEntry), true, true, false, false)
             {
-                EditorGUI.LabelField(rect, "Danh sách Texture", EditorStyles.boldLabel);
+                drawElementCallback = DrawTextureEntry,
+                drawHeaderCallback = rect => EditorGUI.LabelField(rect, "Danh sách Texture", EditorStyles.boldLabel),
+                elementHeight = EditorGUIUtility.singleLineHeight + 6
             };
         }
 
-        void OnGUI()
+        public override void OnGUI()
         {
-            EditorGUILayout.BeginVertical();
+            DrawFolderSection();
+            DrawGlobalSection();
+            DrawListSection();
+            DrawApplySection();
+        }
 
-            GUILayout.Label("Chọn folder chứa image", EditorStyles.boldLabel);
+        // =====================================================
+        // SECTIONS
+        // =====================================================
+
+        void DrawFolderSection()
+        {
+            EditorGUILayout.BeginVertical(EditorStyles.helpBox);
+            GUILayout.Label("1. Nguồn ảnh", EditorStyles.boldLabel);
 
             EditorGUILayout.BeginHorizontal();
-            var newFolder = (DefaultAsset)EditorGUILayout.ObjectField(
-                "Folder",
-                _folderAsset,
-                typeof(DefaultAsset),
-                false
-            );
+            var newFolder = (DefaultAsset)EditorGUILayout.ObjectField("Folder", _folderAsset, typeof(DefaultAsset), false);
 
             if (GUILayout.Button(EditorGUIUtility.IconContent("Refresh"), GUILayout.Width(30)))
-            {
-                _folderAsset = newFolder;
                 LoadTextures();
-            }
             EditorGUILayout.EndHorizontal();
 
             if (newFolder != _folderAsset)
@@ -82,52 +94,56 @@ namespace SketchEngine.Editor
                 LoadTextures();
             }
 
-            GUILayout.Label("Hoặc:", EditorStyles.boldLabel);
             DrawDragDropTexturesArea();
+            EditorGUILayout.EndVertical();
+            GUILayout.Space(6);
+        }
 
-            _applyAndroidOverride = EditorGUILayout.Toggle("Override for Android", _applyAndroidOverride);
-            _applyIOSOverride = EditorGUILayout.Toggle("Override for iOS", _applyIOSOverride);
+        void DrawGlobalSection()
+        {
+            EditorGUILayout.BeginVertical(EditorStyles.helpBox);
+            GUILayout.Label("2. Tùy chọn chung", EditorStyles.boldLabel);
 
-            GUILayout.Space(10);
-            GUILayout.Label("Tùy chọn áp dụng cho tất cả:", EditorStyles.boldLabel);
             _globalGenerateMipMaps = EditorGUILayout.Toggle("Generate MipMaps", _globalGenerateMipMaps);
-            _globalAlphaIsTransparency =
-                EditorGUILayout.Toggle("Alpha Is Transparency", _globalAlphaIsTransparency);
+            _globalAlphaIsTransparency = EditorGUILayout.Toggle("Alpha Is Transparency", _globalAlphaIsTransparency);
+            _useLowForAutoSize = EditorGUILayout.Toggle("Auto Size theo cạnh nhỏ", _useLowForAutoSize);
 
-            GUILayout.Space(10);
-            GUILayout.Label("Chế độ Auto Size:", EditorStyles.boldLabel);
-            _useLowForAutoSize =
-                EditorGUILayout.Toggle("Use Low Side for Auto", _useLowForAutoSize);
+            GUILayout.Space(4);
+            GUILayout.Label("Platform mobile (ASTC)", EditorStyles.miniBoldLabel);
+            _applyAndroidOverride = EditorGUILayout.Toggle("Android", _applyAndroidOverride);
+            _applyIOSOverride = EditorGUILayout.Toggle("iOS", _applyIOSOverride);
 
-            GUILayout.Space(5);
+            EditorGUILayout.EndVertical();
+            GUILayout.Space(6);
+        }
 
-            _scrollPos = EditorGUILayout.BeginScrollView(
-                _scrollPos,
-                GUILayout.Height(position.height - 350)
-            );
+        void DrawListSection()
+        {
+            EditorGUILayout.BeginVertical(EditorStyles.helpBox);
+            GUILayout.Label($"3. Danh sách ({_textureEntries.Count} texture)", EditorStyles.boldLabel);
 
-            if (_textureEntries.Count > 0 && _reorderableList != null)
+            if (_textureEntries.Count == 0)
             {
-                _reorderableList.DoLayoutList();
+                EditorGUILayout.HelpBox("Chọn folder hoặc kéo ảnh vào để bắt đầu.", MessageType.Info);
             }
             else
             {
-                EditorGUILayout.HelpBox(
-                    "Không tìm thấy texture nào trong thư mục.",
-                    MessageType.Info
-                );
+                _scrollPos = EditorGUILayout.BeginScrollView(_scrollPos, GUILayout.MinHeight(160), GUILayout.MaxHeight(420));
+                _reorderableList.DoLayoutList();
+                EditorGUILayout.EndScrollView();
             }
 
-            EditorGUILayout.EndScrollView();
+            EditorGUILayout.EndVertical();
+        }
 
-            GUILayout.FlexibleSpace();
-            GUILayout.Space(10);
-
-            if (GUILayout.Button("Apply Settings", GUILayout.Height(35)))
+        void DrawApplySection()
+        {
+            EditorGUILayout.BeginVertical(EditorStyles.helpBox);
+            using (new EditorGUI.DisabledScope(_textureEntries.Count == 0))
             {
-                ApplySettings();
+                if (GUILayout.Button($"Apply Settings ({_textureEntries.Count})", GUILayout.Height(32)))
+                    ApplySettings();
             }
-
             EditorGUILayout.EndVertical();
         }
 
@@ -138,32 +154,38 @@ namespace SketchEngine.Editor
         void LoadTextures()
         {
             _textureEntries.Clear();
-            if (_folderAsset == null) return;
 
-            string folderPath = AssetDatabase.GetAssetPath(_folderAsset);
-            string[] guids = AssetDatabase.FindAssets("t:Texture2D", new[] { folderPath });
-
-            foreach (string guid in guids)
+            if (_folderAsset != null)
             {
-                string assetPath = AssetDatabase.GUIDToAssetPath(guid);
-                Texture2D texture = AssetDatabase.LoadAssetAtPath<Texture2D>(assetPath);
-                if (texture == null) continue;
+                string folderPath = AssetDatabase.GetAssetPath(_folderAsset);
+                string[] guids = AssetDatabase.FindAssets("t:Texture2D", new[] { folderPath });
 
-                _textureEntries.Add(new TextureEntry
+                foreach (string guid in guids)
                 {
-                    _texture = texture,
-                    _path = assetPath,
-                    _compression = TextureImporterCompression.Compressed,
-                    _maxSizeIndex = 0
-                });
+                    string assetPath = AssetDatabase.GUIDToAssetPath(guid);
+                    Texture2D texture = AssetDatabase.LoadAssetAtPath<Texture2D>(assetPath);
+                    if (texture != null)
+                        AddEntry(texture, assetPath);
+                }
             }
 
             CreateList();
             Repaint();
         }
 
+        void AddEntry(Texture2D texture, string path)
+        {
+            _textureEntries.Add(new TextureEntry
+            {
+                _texture = texture,
+                _path = path,
+                _level = DefaultLevel,
+                _maxSizeIndex = 0
+            });
+        }
+
         // =====================================================
-        // DRAW ITEM
+        // ITEM
         // =====================================================
 
         void DrawTextureEntry(Rect rect, int index, bool isActive, bool isFocused)
@@ -171,47 +193,39 @@ namespace SketchEngine.Editor
             if (index < 0 || index >= _textureEntries.Count) return;
 
             var entry = _textureEntries[index];
-            float x = rect.x;
-            float y = rect.y + 2;
+            rect.y += 3;
             float h = EditorGUIUtility.singleLineHeight;
 
             if (entry._texture == null)
             {
-                EditorGUI.LabelField(
-                    new Rect(x, y, 300, h),
-                    "[Texture đã bị xóa hoặc null]",
-                    EditorStyles.miniLabel
-                );
+                EditorGUI.LabelField(new Rect(rect.x, rect.y, rect.width, h), "[Texture đã bị xóa]", EditorStyles.miniLabel);
                 return;
             }
 
-            EditorGUI.LabelField(new Rect(x, y, 120, h), entry._texture.name);
+            float nameWidth = rect.width * 0.25f;
+            float sizeWidth = 110f;
+            float removeWidth = 24f;
+            float levelWidth = rect.width - nameWidth - sizeWidth - removeWidth - 12f;
+
+            EditorGUI.LabelField(new Rect(rect.x, rect.y, nameWidth, h), entry._texture.name);
 
             EditorGUI.BeginChangeCheck();
-            int newCompressionIndex = EditorGUI.Popup(
-                new Rect(x + 130, y, 80, h),
-                GetCompressionIndex(entry._compression),
-                _compressionOptions
-            );
-
+            int levelIndex = EditorGUI.Popup(
+                new Rect(rect.x + nameWidth + 4, rect.y, levelWidth, h),
+                (int)entry._level,
+                CompressionLabels);
             if (EditorGUI.EndChangeCheck())
-            {
-                entry._compression = GetCompressionFromIndex(newCompressionIndex);
-            }
+                entry._level = (CompressionLevel)levelIndex;
 
             EditorGUI.BeginChangeCheck();
-            int newSizeIndex = EditorGUI.Popup(
-                new Rect(x + 220, y, 60, h),
+            int sizeIndex = EditorGUI.Popup(
+                new Rect(rect.xMax - sizeWidth - removeWidth - 8, rect.y, sizeWidth, h),
                 entry._maxSizeIndex,
-                _maxSizeOptions
-            );
-
+                MaxSizeOptions);
             if (EditorGUI.EndChangeCheck())
-            {
-                entry._maxSizeIndex = newSizeIndex;
-            }
+                entry._maxSizeIndex = sizeIndex;
 
-            if (GUI.Button(new Rect(rect.xMax - 25, y, 20, h), "X"))
+            if (GUI.Button(new Rect(rect.xMax - removeWidth, rect.y, removeWidth, h), "X"))
             {
                 _textureEntries.RemoveAt(index);
                 CreateList();
@@ -225,43 +239,33 @@ namespace SketchEngine.Editor
 
         void DrawDragDropTexturesArea()
         {
-            Rect dropArea = GUILayoutUtility.GetRect(0, 60, GUILayout.ExpandWidth(true));
-            GUI.Box(dropArea, "Kéo ảnh vào đây", EditorStyles.helpBox);
+            Rect dropArea = GUILayoutUtility.GetRect(0, 48, GUILayout.ExpandWidth(true));
+            GUI.Box(dropArea, "Kéo Texture2D vào đây", EditorStyles.helpBox);
 
             Event evt = Event.current;
-            if ((evt.type == EventType.DragUpdated || evt.type == EventType.DragPerform) &&
-                dropArea.Contains(evt.mousePosition))
+            if ((evt.type != EventType.DragUpdated && evt.type != EventType.DragPerform) || !dropArea.Contains(evt.mousePosition))
+                return;
+
+            DragAndDrop.visualMode = DragAndDropVisualMode.Copy;
+
+            if (evt.type == EventType.DragPerform)
             {
-                DragAndDrop.visualMode = DragAndDropVisualMode.Copy;
+                DragAndDrop.AcceptDrag();
 
-                if (evt.type == EventType.DragPerform)
+                foreach (var dragged in DragAndDrop.objectReferences)
                 {
-                    DragAndDrop.AcceptDrag();
-                    foreach (var draggedObj in DragAndDrop.objectReferences)
-                    {
-                        if (draggedObj is Texture2D tex)
-                        {
-                            string path = AssetDatabase.GetAssetPath(tex);
-                            if (!string.IsNullOrEmpty(path) &&
-                                !_textureEntries.Exists(e => e._path == path))
-                            {
-                                _textureEntries.Add(new TextureEntry
-                                {
-                                    _texture = tex,
-                                    _path = path,
-                                    _compression = TextureImporterCompression.Compressed,
-                                    _maxSizeIndex = 0
-                                });
-                            }
-                        }
-                    }
+                    if (dragged is not Texture2D tex) continue;
 
-                    CreateList();
-                    Repaint();
+                    string path = AssetDatabase.GetAssetPath(tex);
+                    if (!string.IsNullOrEmpty(path) && !_textureEntries.Exists(e => e._path == path))
+                        AddEntry(tex, path);
                 }
 
-                evt.Use();
+                CreateList();
+                Repaint();
             }
+
+            evt.Use();
         }
 
         // =====================================================
@@ -272,130 +276,101 @@ namespace SketchEngine.Editor
         {
             int count = 0;
 
-            foreach (var entry in _textureEntries)
+            AssetDatabase.StartAssetEditing();
+            try
             {
-                if (entry._texture == null || string.IsNullOrEmpty(entry._path))
-                    continue;
-
-                var importer =
-                    AssetImporter.GetAtPath(entry._path) as TextureImporter;
-                if (importer == null) continue;
-
-                importer.mipmapEnabled = _globalGenerateMipMaps;
-                importer.alphaIsTransparency = _globalAlphaIsTransparency;
-
-                int maxSize;
-
-                if (entry._maxSizeIndex == 0)
+                foreach (var entry in _textureEntries)
                 {
-                    int dimension = _useLowForAutoSize
-                        ? Mathf.Min(entry._texture.width, entry._texture.height)
-                        : Mathf.Max(entry._texture.width, entry._texture.height);
+                    if (entry._texture == null || string.IsNullOrEmpty(entry._path))
+                        continue;
 
-                    int nearestSize = GetAdjustedSize(dimension);
-                    if (dimension > 2048 || nearestSize > 1024)
-                        nearestSize = 1024;
+                    var importer = AssetImporter.GetAtPath(entry._path) as TextureImporter;
+                    if (importer == null) continue;
 
-                    maxSize = nearestSize;
+                    importer.mipmapEnabled = _globalGenerateMipMaps;
+                    importer.alphaIsTransparency = _globalAlphaIsTransparency;
+
+                    int maxSize = ResolveMaxSize(importer, entry);
+
+                    var defaultSettings = importer.GetDefaultPlatformTextureSettings();
+                    defaultSettings.overridden = true;
+                    defaultSettings.maxTextureSize = maxSize;
+                    defaultSettings.resizeAlgorithm = TextureResizeAlgorithm.Mitchell;
+                    defaultSettings.textureCompression = IsCompressed(entry._level)
+                        ? TextureImporterCompression.Compressed
+                        : TextureImporterCompression.Uncompressed;
+                    defaultSettings.format = IsCompressed(entry._level) ? TextureImporterFormat.Automatic : TextureImporterFormat.RGBA32;
+                    importer.SetPlatformTextureSettings(defaultSettings);
+
+                    ApplyPlatform(importer, "Android", _applyAndroidOverride, maxSize, entry._level);
+                    ApplyPlatform(importer, "iPhone", _applyIOSOverride, maxSize, entry._level);
+
+                    importer.SaveAndReimport();
+                    count++;
                 }
-                else
-                {
-                    maxSize = int.Parse(_maxSizeOptions[entry._maxSizeIndex]);
-                }
-
-                var defaultSettings = importer.GetDefaultPlatformTextureSettings();
-                defaultSettings.overridden = true;
-                defaultSettings.textureCompression = entry._compression;
-                defaultSettings.maxTextureSize = maxSize;
-                defaultSettings.resizeAlgorithm = TextureResizeAlgorithm.Mitchell;
-                defaultSettings.format = GetDefaultFormat(entry._compression);
-                importer.SetPlatformTextureSettings(defaultSettings);
-
-                if (_applyAndroidOverride)
-                {
-                    importer.SetPlatformTextureSettings(new TextureImporterPlatformSettings
-                    {
-                        name = "Android",
-                        overridden = true,
-                        maxTextureSize = maxSize,
-                        format = GetASTCFormat(maxSize),
-                        resizeAlgorithm = TextureResizeAlgorithm.Mitchell,
-                        textureCompression = TextureImporterCompression.Compressed
-                    });
-                }
-
-                if (_applyIOSOverride)
-                {
-                    importer.SetPlatformTextureSettings(new TextureImporterPlatformSettings
-                    {
-                        name = "iPhone",
-                        overridden = true,
-                        maxTextureSize = maxSize,
-                        format = GetASTCFormat(maxSize),
-                        resizeAlgorithm = TextureResizeAlgorithm.Mitchell,
-                        textureCompression = TextureImporterCompression.Compressed
-                    });
-                }
-
-                importer.SaveAndReimport();
-                count++;
+            }
+            finally
+            {
+                AssetDatabase.StopAssetEditing();
             }
 
-            EditorUtility.DisplayDialog(
-                "Hoàn tất",
-                $"Đã chỉnh {count} texture.",
-                "OK"
-            );
+            Debug.Log($"[TextureAutoCompressor] Đã chỉnh {count} texture.");
+        }
+
+        // Bật thì ghi override ASTC/RGBA32 theo mức đã chọn; tắt thì xóa override cũ.
+        static void ApplyPlatform(TextureImporter importer, string platform, bool enabled, int maxSize, CompressionLevel level)
+        {
+            if (!enabled)
+            {
+                importer.ClearPlatformTextureSettings(platform);
+                return;
+            }
+
+            importer.SetPlatformTextureSettings(new TextureImporterPlatformSettings
+            {
+                name = platform,
+                overridden = true,
+                maxTextureSize = maxSize,
+                format = ToFormat(level),
+                resizeAlgorithm = TextureResizeAlgorithm.Mitchell,
+                textureCompression = IsCompressed(level)
+                    ? TextureImporterCompression.Compressed
+                    : TextureImporterCompression.Uncompressed
+            });
+        }
+
+        int ResolveMaxSize(TextureImporter importer, TextureEntry entry)
+        {
+            if (entry._maxSizeIndex != 0)
+                return int.Parse(MaxSizeOptions[entry._maxSizeIndex]);
+
+            // Dùng kích thước NGUỒN: Texture2D.width là kích thước sau import, chạy lại sẽ tự thu nhỏ dần.
+            importer.GetSourceTextureWidthAndHeight(out int width, out int height);
+
+            int dimension = _useLowForAutoSize ? Mathf.Min(width, height) : Mathf.Max(width, height);
+            return Mathf.Min(GetAdjustedSize(dimension), 1024);
         }
 
         // =====================================================
         // HELPERS
         // =====================================================
 
-        int GetCompressionIndex(TextureImporterCompression compression)
-        {
-            return compression switch
-            {
-                TextureImporterCompression.Uncompressed => 0,
-                TextureImporterCompression.CompressedLQ => 1,
-                TextureImporterCompression.Compressed => 2,
-                TextureImporterCompression.CompressedHQ => 3,
-                _ => 2
-            };
-        }
+        static bool IsCompressed(CompressionLevel level) => level != CompressionLevel.Uncompressed;
 
-        TextureImporterCompression GetCompressionFromIndex(int index)
+        static TextureImporterFormat ToFormat(CompressionLevel level)
         {
-            return index switch
+            return level switch
             {
-                0 => TextureImporterCompression.Uncompressed,
-                1 => TextureImporterCompression.CompressedLQ,
-                2 => TextureImporterCompression.Compressed,
-                3 => TextureImporterCompression.CompressedHQ,
-                _ => TextureImporterCompression.Compressed
-            };
-        }
-
-        TextureImporterFormat GetDefaultFormat(TextureImporterCompression compression)
-        {
-            return compression switch
-            {
-                TextureImporterCompression.Uncompressed => TextureImporterFormat.RGBA32,
-                TextureImporterCompression.CompressedLQ => TextureImporterFormat.RGB16,
-                TextureImporterCompression.Compressed => TextureImporterFormat.RGBA32,
-                TextureImporterCompression.CompressedHQ => TextureImporterFormat.RGBAFloat,
+                CompressionLevel.Astc4x4 => TextureImporterFormat.ASTC_4x4,
+                CompressionLevel.Astc6x6 => TextureImporterFormat.ASTC_6x6,
+                CompressionLevel.Astc8x8 => TextureImporterFormat.ASTC_8x8,
+                CompressionLevel.Astc10x10 => TextureImporterFormat.ASTC_10x10,
+                CompressionLevel.Astc12x12 => TextureImporterFormat.ASTC_12x12,
                 _ => TextureImporterFormat.RGBA32
             };
         }
 
-        TextureImporterFormat GetASTCFormat(int maxSize)
-        {
-            if (maxSize <= 128) return TextureImporterFormat.ASTC_4x4;
-            if (maxSize <= 512) return TextureImporterFormat.ASTC_6x6;
-            return TextureImporterFormat.ASTC_8x8;
-        }
-
-        int GetAdjustedSize(int size)
+        static int GetAdjustedSize(int size)
         {
             int[] options = { 32, 64, 128, 256, 512, 1024, 2048 };
             foreach (int opt in options)
@@ -404,7 +379,7 @@ namespace SketchEngine.Editor
                 {
                     if (opt > size + 200)
                     {
-                        int index = System.Array.IndexOf(options, opt);
+                        int index = Array.IndexOf(options, opt);
                         return options[Mathf.Max(0, index - 1)];
                     }
                     return opt;
@@ -421,7 +396,7 @@ namespace SketchEngine.Editor
         {
             public Texture2D _texture;
             public string _path;
-            public TextureImporterCompression _compression;
+            public CompressionLevel _level;
             public int _maxSizeIndex;
         }
     }

@@ -1,39 +1,78 @@
 using System;
+using System.Collections.Concurrent;
+using SketchEngine.Mono;
 using UnityEngine;
+#if UNITY_EDITOR
+using UnityEditor;
+#endif
 
 namespace SketchEngine.Core.MainThread
 {
     /// <summary>
-    /// Unity API isn't thread safe, so in case you are using threads,
-    /// and you need to call any Unity API from that thread, this class is exactly what you need.
-    /// The <see cref="MainThreadDispatcher"/> is available for Editor and Play mode usage.
+    /// Đưa action từ thread nền về main thread. Có thể gọi Enqueue từ bất kỳ thread nào.
+    /// Mỗi frame xử lý trong một ngân sách thời gian nhỏ để không gây giật frame.
+    /// Action còn lại không bị bỏ, sẽ chạy ở các frame sau, đúng thứ tự enqueue.
     /// </summary>
     public static class MainThreadDispatcher
     {
-        static IMainThreadDispatcher s_MainThreadDispatcher;
+        // Ngân sách xử lý mỗi frame (ms). Kiểm tra thời gian mỗi CheckTimeEvery action để giảm chi phí đọc đồng hồ.
+        const float FrameBudgetMs = 1f;
+        const int CheckTimeEvery = 8;
 
-        static void LazyInit()
-        {
-            if (s_MainThreadDispatcher != null)
-                return;
+        static readonly ConcurrentQueue<Action> s_queue = new ConcurrentQueue<Action>();
+        static bool s_subscribed;
 
-            if (Application.isEditor)
-                s_MainThreadDispatcher = new MainThreadDispatcherEditor();
-            else
-                s_MainThreadDispatcher = new MainThreadDispatcherRuntime();
-
-            s_MainThreadDispatcher.Init();
-        }
-        
-        /// <summary>
-        /// Adds an <see cref="Action"/> to the main thread queue.
-        /// The Action will be dispatched under a main thread on a next frame.
-        /// </summary>
-        /// <param name="action">The callback action.</param>
+        /// <summary>Thêm action vào hàng đợi, sẽ chạy trên main thread ở frame sau. An toàn từ mọi thread.</summary>
         public static void Enqueue(Action action)
         {
-            LazyInit();
-            s_MainThreadDispatcher.Enqueue(action);
+            if (action == null) return;
+            s_queue.Enqueue(action);
+        }
+
+#if UNITY_EDITOR
+        [InitializeOnLoadMethod]
+        static void SubscribeEditor()
+        {
+            EditorApplication.update -= Tick;
+            EditorApplication.update += Tick;
+        }
+#else
+        // AfterSceneLoad: MonoCallback cần scene và main thread. Enqueue trước đó vẫn an toàn, chỉ chờ.
+        [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.AfterSceneLoad)]
+        static void SubscribeRuntime()
+        {
+            if (s_subscribed) return;
+            s_subscribed = true;
+
+            MonoCallback.SafeInstance.EventUpdate += Tick;
+        }
+#endif
+
+        // Xử lý trong ngân sách thời gian mỗi frame. Phần còn lại không bị bỏ: vẫn nằm trong hàng đợi và chạy ở frame sau, đúng thứ tự.
+        static void Tick()
+        {
+            if (s_queue.IsEmpty) return;
+
+            float start = UnityEngine.Time.realtimeSinceStartup;
+            int processed = 0;
+
+            while (s_queue.TryDequeue(out Action action))
+            {
+                try
+                {
+                    action();
+                }
+                catch (Exception e)
+                {
+                    // Một action lỗi không được làm hỏng các action còn lại.
+                    Debug.LogException(e);
+                }
+
+                processed++;
+                if (processed % CheckTimeEvery == 0 &&
+                    (UnityEngine.Time.realtimeSinceStartup - start) * 1000f >= FrameBudgetMs)
+                    break;
+            }
         }
     }
 }

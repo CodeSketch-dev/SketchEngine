@@ -5,9 +5,9 @@ namespace SketchEngine.Debug
     public class DebugToggleAdsInterSkip : DebugToggle
     {
         protected override bool IsOn
-        { 
-            get => DataMaster.AdsInterSkip.Value;
-            set => DataMaster.AdsInterSkip.Value = value;
+        {
+            get => DataMaster.AdsInterstitialSkip.Value;
+            set => DataMaster.AdsInterstitialSkip.Value = value;
         }
     }
 }

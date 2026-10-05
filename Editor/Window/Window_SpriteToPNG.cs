@@ -5,23 +5,94 @@ using UnityEngine;
 
 namespace SketchEngine.Editor
 {
-    public class Window_SpriteToPNG : EditorWindow
+    public class Window_SpriteToPNG : SketchToolTab
     {
-        readonly List<Sprite> spriteList = new(); // Danh sách Sprite
-        string savePath = "Assets/_SpriteToPNG"; // Đường dẫn lưu mặc định
+        public override string Title => "Sprite To PNG";
 
-        [MenuItem("CodeSketch/Tools/Window/Sprite To PNG")]
-        public static void ShowWindow()
+        const string DefaultSavePath = "Assets/_SpriteToPNG";
+
+        readonly List<Object> _items = new List<Object>(); // Sprite hoặc Texture2D
+        string _savePath = DefaultSavePath;
+        Vector2 _scroll;
+        string _status = "";
+
+        public override void OnGUI()
         {
-            GetWindow<Window_SpriteToPNG>("Sprite To PNG");
+            GUILayout.Space(6);
+
+            DrawSection("1. Nguồn ảnh", () =>
+            {
+                DrawDropArea();
+                GUILayout.Space(4);
+                DrawList();
+            });
+
+            DrawSection("2. Nơi lưu", () =>
+            {
+                EditorGUILayout.BeginHorizontal();
+                EditorGUILayout.LabelField(_savePath, EditorStyles.miniLabel);
+                if (GUILayout.Button("Chọn thư mục...", GUILayout.Width(120)))
+                {
+                    string selected = EditorUtility.SaveFolderPanel("Chọn nơi lưu", _savePath, "");
+                    if (!string.IsNullOrEmpty(selected))
+                        _savePath = FileUtil.GetProjectRelativePath(selected);
+                }
+                EditorGUILayout.EndHorizontal();
+            });
+
+            DrawSection("3. Xuất", () =>
+            {
+                EditorGUILayout.BeginHorizontal();
+
+                using (new EditorGUI.DisabledScope(_items.Count == 0))
+                {
+                    if (GUILayout.Button($"Convert & Save PNG ({_items.Count})", GUILayout.Height(28)))
+                        ConvertAll();
+                }
+
+                using (new EditorGUI.DisabledScope(_items.Count == 0))
+                {
+                    if (GUILayout.Button("Xoá hết", GUILayout.Width(90), GUILayout.Height(28)))
+                    {
+                        _items.Clear();
+                        _status = "";
+                    }
+                }
+
+                EditorGUILayout.EndHorizontal();
+
+                if (!string.IsNullOrEmpty(_status))
+                {
+                    GUILayout.Space(4);
+                    EditorGUILayout.HelpBox(_status, MessageType.Info);
+                }
+            });
         }
 
-        void OnGUI()
+        // Khối có tiêu đề, bọc trong helpBox để các phần tách bạch.
+        static void DrawSection(string title, System.Action content)
         {
-            GUILayout.Label("Drag & Drop Sprites Here", EditorStyles.boldLabel);
+            EditorGUILayout.BeginVertical(EditorStyles.helpBox);
+            GUILayout.Label(title, EditorStyles.boldLabel);
+            GUILayout.Space(2);
+            content();
+            EditorGUILayout.EndVertical();
+            GUILayout.Space(6);
+        }
 
-            // Kéo thả nhiều Sprite vào danh sách
+        // =====================================================
+        // DRAG & DROP
+        // =====================================================
+
+        void DrawDropArea()
+        {
+            Rect area = GUILayoutUtility.GetRect(0, 64, GUILayout.ExpandWidth(true));
+            GUI.Box(area, "Kéo Sprite / Texture2D vào đây", EditorStyles.helpBox);
+
             Event evt = Event.current;
+            if (!area.Contains(evt.mousePosition))
+                return;
+
             if (evt.type == EventType.DragUpdated || evt.type == EventType.DragPerform)
             {
                 DragAndDrop.visualMode = DragAndDropVisualMode.Copy;
@@ -29,102 +100,147 @@ namespace SketchEngine.Editor
                 if (evt.type == EventType.DragPerform)
                 {
                     DragAndDrop.AcceptDrag();
-                    foreach (Object obj in DragAndDrop.objectReferences)
-                        if (obj is Sprite sprite && !spriteList.Contains(sprite))
-                            spriteList.Add(sprite);
+                    AddDropped(DragAndDrop.objectReferences);
                 }
 
-                Event.current.Use();
+                evt.Use();
+            }
+        }
+
+        void AddDropped(Object[] objects)
+        {
+            foreach (Object obj in objects)
+            {
+                if ((obj is Sprite || obj is Texture2D) && !_items.Contains(obj))
+                    _items.Add(obj);
+            }
+        }
+
+        void DrawList()
+        {
+            if (_items.Count == 0)
+            {
+                GUILayout.Label("Chưa có ảnh nào được chọn.", EditorStyles.centeredGreyMiniLabel);
+                return;
             }
 
-            // Hiển thị danh sách Sprite
-            if (spriteList.Count > 0)
+            _scroll = EditorGUILayout.BeginScrollView(_scroll, GUILayout.Height(240));
+
+            for (int i = 0; i < _items.Count; i++)
             {
-                GUILayout.Label("Selected Sprites:", EditorStyles.boldLabel);
-                for (var i = 0; i < spriteList.Count; i++)
+                Object item = _items[i];
+
+                EditorGUILayout.BeginHorizontal(EditorStyles.helpBox);
+
+                Texture thumb = AssetPreview.GetMiniThumbnail(item);
+                GUILayout.Label(thumb, GUILayout.Width(40), GUILayout.Height(40));
+
+                EditorGUILayout.BeginVertical();
+                GUILayout.Label(item.name, EditorStyles.boldLabel);
+                GUILayout.Label(item is Sprite ? "Sprite" : "Texture2D", EditorStyles.miniLabel);
+                EditorGUILayout.EndVertical();
+
+                GUILayout.FlexibleSpace();
+
+                if (GUILayout.Button("Xoá", GUILayout.Width(50)))
                 {
-                    EditorGUILayout.BeginHorizontal();
-                    EditorGUILayout.ObjectField(spriteList[i], typeof(Sprite), false);
-                    if (GUILayout.Button("Remove", GUILayout.Width(70)))
-                    {
-                        spriteList.RemoveAt(i);
-                        break;
-                    }
-
+                    _items.RemoveAt(i);
                     EditorGUILayout.EndHorizontal();
+                    break;
                 }
-            }
-            else
-            {
-                GUILayout.Label("No sprites selected.", EditorStyles.miniLabel);
+
+                EditorGUILayout.EndHorizontal();
             }
 
-            GUILayout.Space(10);
-
-            // Chọn nơi lưu file
-            EditorGUILayout.LabelField("Save Path:", savePath);
-            if (GUILayout.Button("Choose Save Folder"))
-            {
-                var selectedPath = EditorUtility.SaveFolderPanel("Choose Save Location", savePath, "");
-                if (!string.IsNullOrEmpty(selectedPath)) savePath = FileUtil.GetProjectRelativePath(selectedPath);
-            }
-
-            GUILayout.Space(10);
-
-            // Nút Convert
-            GUI.enabled = spriteList.Count > 0;
-            if (GUILayout.Button("Convert & Save PNGs")) ConvertSpritesToPNG();
-            GUI.enabled = true;
+            EditorGUILayout.EndScrollView();
         }
 
-        void ConvertSpritesToPNG()
+        // =====================================================
+        // CONVERT
+        // =====================================================
+
+        void ConvertAll()
         {
-            foreach (Sprite sprite in spriteList)
+            Directory.CreateDirectory(_savePath);
+
+            var usedNames = new HashSet<string>();
+            int saved = 0;
+
+            foreach (Object item in _items)
             {
-                var filePath = Path.Combine(savePath, sprite.name + ".png");
-                SaveTextureAsPNG(SpriteToTexture2D(sprite), filePath);
+                if (!TryGetImage(item, out Texture2D source, out Rect rect))
+                    continue;
+
+                string fileName = UniqueFileName(GetBaseName(item), usedNames);
+                Texture2D readable = ReadRect(source, rect);
+                File.WriteAllBytes(Path.Combine(_savePath, fileName + ".png"), readable.EncodeToPNG());
+                Object.DestroyImmediate(readable);
+                saved++;
             }
 
-            AssetDatabase.Refresh(); // Làm mới Unity Editor
-            Debug.Log($"Saved {spriteList.Count} sprites to {savePath}");
+            AssetDatabase.Refresh();
+            _status = $"Đã lưu {saved}/{_items.Count} ảnh vào {_savePath}";
+            Debug.Log($"[SpriteToPNG] {_status}");
         }
 
-        private Texture2D SpriteToTexture2D(Sprite sprite)
+        static bool TryGetImage(Object item, out Texture2D texture, out Rect rect)
         {
-            if (sprite == null || sprite.texture == null)
+            texture = null;
+            rect = default;
+
+            if (item is Sprite sprite && sprite.texture != null)
             {
-                Debug.LogError("Sprite or Texture is null!");
-                return null;
+                texture = sprite.texture;
+                rect = sprite.rect;
+                return true;
             }
 
-            // Lấy vùng Rect của Sprite
-            Rect rect = sprite.rect;
-            Texture2D sourceTex = sprite.texture;
+            if (item is Texture2D tex)
+            {
+                texture = tex;
+                rect = new Rect(0, 0, tex.width, tex.height);
+                return true;
+            }
 
-            // Tạo bản sao Texture2D có thể đọc
-            Texture2D readableTex = new Texture2D((int)rect.width, (int)rect.height, TextureFormat.RGBA32, false);
+            return false;
+        }
 
-            // Copy pixels từ sprite texture gốc
-            RenderTexture rt = RenderTexture.GetTemporary(sourceTex.width, sourceTex.height);
-            Graphics.Blit(sourceTex, rt);
+        static string GetBaseName(Object item)
+        {
+            return string.IsNullOrEmpty(item.name) ? "image" : item.name;
+        }
+
+        static string UniqueFileName(string name, HashSet<string> used)
+        {
+            string candidate = name;
+            int index = 1;
+            while (!used.Add(candidate))
+                candidate = $"{name}_{index++}";
+            return candidate;
+        }
+
+        // Đọc vùng rect của texture (kể cả texture không bật Read/Write) qua RenderTexture.
+        static Texture2D ReadRect(Texture2D source, Rect rect)
+        {
+            int width = Mathf.Max(1, (int)rect.width);
+            int height = Mathf.Max(1, (int)rect.height);
+
+            RenderTexture rt = RenderTexture.GetTemporary(source.width, source.height, 0,
+                RenderTextureFormat.ARGB32, RenderTextureReadWrite.sRGB);
             RenderTexture prev = RenderTexture.active;
+
+            Graphics.Blit(source, rt);
             RenderTexture.active = rt;
-    
-            readableTex.ReadPixels(new Rect(rect.x, sourceTex.height - rect.y - rect.height, rect.width, rect.height), 0, 0);
-            readableTex.Apply();
+
+            var readable = new Texture2D(width, height, TextureFormat.RGBA32, false);
+            // Unity gốc Y ở dưới, còn ReadPixels đọc từ Y dưới: đổi hệ tọa độ của vùng rect.
+            readable.ReadPixels(new Rect(rect.x, source.height - rect.y - rect.height, width, height), 0, 0);
+            readable.Apply();
 
             RenderTexture.active = prev;
             RenderTexture.ReleaseTemporary(rt);
 
-            return readableTex;
-        }
-
-
-        void SaveTextureAsPNG(Texture2D texture, string filePath)
-        {
-            var bytes = texture.EncodeToPNG();
-            File.WriteAllBytes(filePath, bytes);
-            Debug.Log($"Saved PNG: {filePath}");
+            return readable;
         }
     }
 }

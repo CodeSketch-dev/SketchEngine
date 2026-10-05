@@ -23,7 +23,8 @@ namespace SketchEngine.Core.Extensions
             }
 
             target.isTrigger = source.isTrigger;
-            target.material = source.material;
+            // sharedMaterial: không tạo bản sao material (material sẽ tạo instance mới và rò rỉ).
+            target.sharedMaterial = source.sharedMaterial;
 
             switch (source)
             {

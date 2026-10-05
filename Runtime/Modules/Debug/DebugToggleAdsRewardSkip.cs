@@ -4,10 +4,10 @@ namespace SketchEngine.Debug
 {
     public class DebugToggleAdsRewardSkip : DebugToggle
     {
-        protected override bool IsOn 
+        protected override bool IsOn
         {
-            get => DataMaster.AdsRewardSkip.Value;
-            set => DataMaster.AdsRewardSkip.Value = value;
+            get => DataMaster.AdsRewardedSkip.Value;
+            set => DataMaster.AdsRewardedSkip.Value = value;
         }
     }
 }

@@ -19,7 +19,7 @@ namespace SketchEngine.Core.Time
     /// - Cooldown across sessions
     /// - Offline progress
     /// - IAP / reward timers
-    /// Use UtilsTime (Unix time) instead.
+    /// Use UtilityTime (Unix time) instead.
     /// </summary>
     public abstract class Timer
     {

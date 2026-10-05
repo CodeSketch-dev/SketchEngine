@@ -1,4 +1,3 @@
-using System;
 using System.Collections.Generic;
 using System.Runtime.CompilerServices;
 using UnityEngine;
@@ -7,73 +6,94 @@ namespace SketchEngine.Optimize
 {
     public static class OptCollisionLookup2D
     {
-        internal static class TypedMap<T> where T : class
+        // Trả về mảng ID đã đăng ký (tái sử dụng cachedIds nếu đúng kích thước).
+        public static int[] Register(MonoBehaviour owner, Collider2D[] colliders, int[] cachedIds)
         {
-            internal static readonly Dictionary<int, T[]> MAP = new(64);
+            if (owner == null || colliders == null) return cachedIds;
 
-            [MethodImpl(MethodImplOptions.AggressiveInlining)]
-            internal static void Register(int id, T owner)
+            int count = colliders.Length;
+            if (cachedIds == null || cachedIds.Length != count)
+                cachedIds = new int[count];
+
+            for (int i = 0; i < count; i++)
             {
-                if (!MAP.TryGetValue(id, out var owners))
+                Collider2D col = colliders[i];
+                if (col == null)
                 {
-                    MAP[id] = new[] { owner };
-                    return;
+                    cachedIds[i] = 0;
+                    continue;
                 }
 
-                for (int i = 0; i < owners.Length; i++)
-                    if (ReferenceEquals(owners[i], owner)) return;
-
-                var newOwners = new T[owners.Length + 1];
-                Array.Copy(owners, newOwners, owners.Length);
-                newOwners[owners.Length] = owner;
-                MAP[id] = newOwners;
+                int id = col.GetInstanceID();
+                cachedIds[i] = id;
+                OptCollisionMap.Add(id, owner);
             }
 
-            internal static void Unregister(int id, T owner)
+            return cachedIds;
+        }
+
+        // ID 0 = không có collider.
+        public static void Unregister(MonoBehaviour owner, int[] ids)
+        {
+            if (owner == null || ids == null) return;
+
+            for (int i = 0; i < ids.Length; i++)
             {
-                if (!MAP.TryGetValue(id, out var owners)) return;
-
-                int index = -1;
-                for (int i = 0; i < owners.Length; i++)
-                    if (ReferenceEquals(owners[i], owner)) { index = i; break; }
-                if (index < 0) return;
-                if (owners.Length == 1) { MAP.Remove(id); return; }
-
-                var newOwners = new T[owners.Length - 1];
-                if (index > 0) Array.Copy(owners, 0, newOwners, 0, index);
-                if (index < owners.Length - 1) Array.Copy(owners, index + 1, newOwners, index, owners.Length - index - 1);
-                MAP[id] = newOwners;
+                if (ids[i] != 0)
+                    OptCollisionMap.Remove(ids[i], owner);
             }
         }
 
-        public static void Register<T>(T owner, Collider2D[] colliders) where T : class
-        {
-            if (owner == null || colliders == null) return;
-            for (int i = 0; i < colliders.Length; i++)
-                if (colliders[i] != null) TypedMap<T>.Register(colliders[i].GetInstanceID(), owner);
-        }
-
-        public static void Unregister<T>(T owner, Collider2D[] colliders) where T : class
-        {
-            if (owner == null || colliders == null) return;
-            for (int i = 0; i < colliders.Length; i++)
-                if (colliders[i] != null) TypedMap<T>.Unregister(colliders[i].GetInstanceID(), owner);
-        }
-
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static void ForEach<T>(Collider2D collider, Action<T> action) where T : class
+        internal static bool TryGetSlot(Collider2D collider, out OptSlot slot)
         {
-            if (collider == null || action == null || !TypedMap<T>.MAP.TryGetValue(collider.GetInstanceID(), out var owners)) return;
-            for (int i = 0; i < owners.Length; i++) action(owners[i]);
+            slot = null;
+            return collider != null && OptCollisionMap.TryGet(collider.GetInstanceID(), out slot);
         }
 
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static bool TryGetFirst<T>(Collider2D collider, out T owner) where T : class
+        // Dùng cho Physics2D.OverlapXxx / Raycast: lấy script kiểu T gắn trên collider mà không GetComponent.
+        public static bool TryFindFirst<T>(Collider2D collider, out T result) where T : class
         {
-            owner = null;
-            if (collider == null || !TypedMap<T>.MAP.TryGetValue(collider.GetInstanceID(), out var owners) || owners.Length == 0) return false;
-            owner = owners[0];
-            return true;
+            result = null;
+            if (!TryGetSlot(collider, out OptSlot slot)) return false;
+
+            int n = slot.Count;
+            for (int i = 0; i < n; i++)
+            {
+                if (slot.Items[i] is T match)
+                {
+                    result = match;
+                    return true;
+                }
+            }
+
+            return false;
+        }
+
+        // Ghi mọi script kiểu T của collider vào list do caller cấp (không tạo list mới).
+        public static bool TryGetAll<T>(Collider2D collider, List<T> results) where T : class
+        {
+            if (results == null) return false;
+            results.Clear();
+
+            if (!TryGetSlot(collider, out OptSlot slot)) return false;
+
+            int n = slot.Count;
+            for (int i = 0; i < n; i++)
+            {
+                if (slot.Items[i] is T match)
+                    results.Add(match);
+            }
+
+            return results.Count > 0;
+        }
+
+        internal static void BeginDispatch() => OptCollisionMap.BeginDispatch();
+        internal static void EndDispatch() => OptCollisionMap.EndDispatch();
+
+        public static void Clear()
+        {
+            OptCollisionMap.Clear();
         }
     }
 }

@@ -13,6 +13,12 @@
     "precompiledReferences": [],
     "autoReferenced": true,
     "defineConstraints": [],
-    "versionDefines": [],
+    "versionDefines": [
+        {
+            "name": "com.google.play.review",
+            "expression": "",
+            "define": "SKETCHENGINE_APPSTORE"
+        }
+    ],
     "noEngineReferences": false
 }

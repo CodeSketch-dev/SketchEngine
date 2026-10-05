@@ -1,13 +1,13 @@
 ﻿using DG.Tweening;
 using Sirenix.OdinInspector;
-using System;
 using SketchEngine.Mono;
+using System;
 using UnityEngine;
 using UnityEngine.UI;
 
 namespace SketchEngine.Utilities.Animations
 {
-    public class AnimationSequence : MonoBase
+    public class AnimationSequence : MonoCached
     {
         [Serializable, Flags]
         public enum Callback
@@ -64,23 +64,9 @@ namespace SketchEngine.Utilities.Animations
         [SerializeField] float _delay;
 
         Sequence _sequence;
-
-        RectTransform _rectTransform;
-
         Graphic _graphic;
 
-        public RectTransform rectTransform
-        {
-            get
-            {
-                if (_rectTransform == null)
-                    _rectTransform = GetComponent<RectTransform>();
-
-                return _rectTransform;
-            }
-        }
-
-        public Graphic graphic
+        public Graphic Graphic
         {
             get
             {
@@ -91,7 +77,7 @@ namespace SketchEngine.Utilities.Animations
             }
         }
 
-        public Sequence sequence
+        public Sequence Sequence
         {
             get
             {
@@ -106,10 +92,8 @@ namespace SketchEngine.Utilities.Animations
             _sequence?.Kill();
         }
 
-        protected override void OnEnable()
+        protected virtual void OnEnable()
         {
-            base.OnEnable();
-
             InitSequence();
 
             if (_actionOnEnable.HasFlag(ActionOnEnable.Complete))
@@ -125,10 +109,8 @@ namespace SketchEngine.Utilities.Animations
                 _sequence?.PlayBackwards();
         }
 
-        protected override void OnDisable()
+        protected virtual void OnDisable()
         {
-            base.OnDisable();
-
             if (_actionOnDisable.HasFlag(ActionOnDisable.Pause))
                 _sequence?.Pause();
 
@@ -150,13 +132,9 @@ namespace SketchEngine.Utilities.Animations
             }
 
             _sequence.SetAutoKill(_isAutoKill);
-
             _sequence.SetLoops(_loopCount, _loopType);
-
             _sequence.SetDelay(_delay);
-
             _sequence.SetUpdate(_updateType, _isIndependentUpdate);
-
             _sequence.Pause();
         }
 

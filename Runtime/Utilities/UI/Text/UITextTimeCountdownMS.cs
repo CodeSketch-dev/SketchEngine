@@ -4,9 +4,9 @@ namespace SketchEngine.Utilities.Text
 {
     public class UITextTimeCountdownMS : UITextTimeCountdown
     {
-        static readonly string s_format = "{0:00}:{1:00}";
+        static readonly string FORMAT = "{0:00}:{1:00}";
 
-        [SerializeField] string _textFormat;
+        [SerializeField] string _format;
 
         protected override void UpdateTimeDisplay(float timeToDisplay)
         {
@@ -17,10 +17,10 @@ namespace SketchEngine.Utilities.Text
             int minutes = Mathf.FloorToInt(time / 60f);
             int seconds = Mathf.FloorToInt(time % 60);
 
-            if (string.IsNullOrEmpty(_textFormat))
-                Text.text = string.Format(s_format, minutes, seconds);
+            if (string.IsNullOrEmpty(_format))
+                Text.text = string.Format(FORMAT, minutes, seconds);
             else
-                Text.text = string.Format(_textFormat, minutes, seconds);
+                Text.text = string.Format(_format, minutes, seconds);
         }
     }
 }

@@ -4,7 +4,7 @@ using UnityEngine.EventSystems;
 
 namespace SketchEngine.Utilities.UI
 {
-    public class UIPointerClick : MonoBase, IPointerDownHandler, IPointerUpHandler
+    public class UIPointerClick : MonoCached, IPointerDownHandler, IPointerUpHandler
     {
         public event Action EventDown;
         public event Action EventUp;

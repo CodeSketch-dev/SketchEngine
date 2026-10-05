@@ -16,12 +16,12 @@ namespace SketchEngine.Utilities.UI
         [SerializeField] float _duration = 0.1f;
 
         Vector3 _startScale;
-        
+
         Tween _tween;
         bool _isDown;
 
         Button _button;
-        Button button => _button != null ? _button : (_button = GetComponent<Button>());
+        Button Button => _button != null ? _button : (_button = GetComponent<Button>());
 
         void Awake()
         {
@@ -57,7 +57,7 @@ namespace SketchEngine.Utilities.UI
 
         void IPointerDownHandler.OnPointerDown(PointerEventData eventData)
         {
-            if (button != null && !button.interactable) return;
+            if (Button != null && !Button.interactable) return;
 
             _isDown = true;
             ScaleTo(_scaleThreshold);

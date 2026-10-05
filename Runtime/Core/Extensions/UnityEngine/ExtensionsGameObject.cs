@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using UnityEngine;
 using Object = UnityEngine.Object;
 
@@ -12,15 +13,6 @@ namespace SketchEngine.Core.Extensions
             var comp = gameObject.GetComponent<T>();
             if (comp != null)
                 Object.Destroy(comp);
-        }
-
-        public static void RemoveComponents<T>(this GameObject gameObject) where T : Component
-        {
-            var components = gameObject.GetComponents<T>();
-            for (int i = components.Length - 1; i >= 0; i--)
-            {
-                Object.Destroy(components[i]);
-            }
         }
 
         #endregion
@@ -63,29 +55,46 @@ namespace SketchEngine.Core.Extensions
 
         public static void SetLayerRecursively(this GameObject gameObject, int layerNumber)
         {
-            foreach (var t in gameObject.GetComponentsInChildren<Transform>(true))
-            {
-                t.gameObject.layer = layerNumber;
-            }
+            var transforms = SharedComponents<Transform>.List;
+            gameObject.GetComponentsInChildren(true, transforms);
+            for (int i = 0; i < transforms.Count; i++)
+                transforms[i].gameObject.layer = layerNumber;
+            transforms.Clear();
         }
 
         public static Bounds GetRendererBounds(this GameObject go)
         {
-            var renderers = go.GetComponentsInChildren<Renderer>(true);
-            if (renderers.Length == 0)
+            var renderers = SharedComponents<Renderer>.List;
+            go.GetComponentsInChildren(true, renderers);
+
+            if (renderers.Count == 0)
+            {
                 return new Bounds(go.transform.position, Vector3.zero);
+            }
 
             var bounds = renderers[0].bounds;
-            for (int i = 1; i < renderers.Length; i++)
+            for (int i = 1; i < renderers.Count; i++)
                 bounds.Encapsulate(renderers[i].bounds);
 
+            renderers.Clear();
             return bounds;
         }
 
+        // Destroy an toàn khi đang Play; DestroyImmediate chỉ dùng trong Editor.
         public static void TryRemove(this GameObject go)
         {
-            if (go != null)
+            if (go == null) return;
+
+            if (Application.isPlaying)
+                Object.Destroy(go);
+            else
                 Object.DestroyImmediate(go);
+        }
+
+        // List tái sử dụng theo kiểu, tránh cấp phát mảng mỗi lần gọi GetComponents.
+        static class SharedComponents<T> where T : Component
+        {
+            internal static readonly List<T> List = new List<T>(16);
         }
 
         #endregion

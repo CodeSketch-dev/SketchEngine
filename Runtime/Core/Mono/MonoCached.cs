@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 namespace SketchEngine.Mono
@@ -42,16 +40,19 @@ namespace SketchEngine.Mono
             }
         }
 
-        protected virtual void Tick()
+        public virtual void Tick()
         {
+            // For Override
         }
 
-        protected virtual void LateTick()
+        public virtual void LateTick()
         {
+            // For Override
         }
 
-        protected virtual void FixedTick()
+        public virtual void FixedTick()
         {
+            // For Override
         }
     }
 }

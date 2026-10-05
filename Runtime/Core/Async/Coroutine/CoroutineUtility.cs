@@ -1,37 +1,33 @@
 using System;
 using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 
 namespace SketchEngine.Core.Async
 {
     /// <summary>
-    /// Static coroutine helper utilities.
-    /// 
-    /// This class provides a safe, static facade over the global coroutine runner
-    /// (<see cref="CoroutineGlobal"/>), allowing coroutine usage without directly
-    /// accessing any <see cref="MonoBehaviour"/>.
+    /// Tiện ích coroutine tĩnh, không cần truy cập MonoBehaviour nào.
+    /// Các yield instruction không đổi được cache để không tạo rác mỗi lần gọi.
     /// </summary>
     public static class CoroutineUtility
     {
+        // Giới hạn số lượng cache theo thời lượng, tránh phình bộ nhớ nếu game dùng quá nhiều giá trị khác nhau.
+        const int MaxCachedDurations = 64;
+
+        static readonly UnityEngine.WaitForEndOfFrame s_endOfFrame = new UnityEngine.WaitForEndOfFrame();
+        static readonly UnityEngine.WaitForFixedUpdate s_fixedUpdate = new UnityEngine.WaitForFixedUpdate();
+        static readonly Dictionary<int, UnityEngine.WaitForSeconds> s_scaledCache = new Dictionary<int, UnityEngine.WaitForSeconds>();
+        static readonly Dictionary<int, UnityEngine.WaitForSecondsRealtime> s_realtimeCache = new Dictionary<int, UnityEngine.WaitForSecondsRealtime>();
+
         // =====================================================
         // BASIC COROUTINE
         // =====================================================
 
-        /// <summary>
-        /// Starts a coroutine using the global coroutine runner.
-        /// Equivalent to MonoBehaviour.StartCoroutine.
-        /// </summary>
-        /// <param name="routine">Coroutine routine.</param>
-        /// <returns>Started Coroutine.</returns>
         public static Coroutine Start(IEnumerator routine)
         {
             return CoroutineGlobal.Run(routine);
         }
 
-        /// <summary>
-        /// Stops a coroutine started via <see cref="Start"/>.
-        /// </summary>
-        /// <param name="coroutine">Coroutine reference.</param>
         public static void Stop(Coroutine coroutine)
         {
             CoroutineGlobal.Stop(coroutine);
@@ -41,63 +37,76 @@ namespace SketchEngine.Core.Async
         // YIELD INSTRUCTION HELPERS
         // =====================================================
 
-        /// <summary>
-        /// Executes an action at the end of the current frame.
-        /// </summary>
         public static void WaitForEndOfFrame(Action action)
         {
-            CoroutineGlobal.RunAfter(new WaitForEndOfFrame(), action);
+            CoroutineGlobal.RunAfter(s_endOfFrame, action);
         }
 
-        /// <summary>
-        /// Executes an action on the next FixedUpdate tick.
-        /// </summary>
         public static void WaitForFixedUpdate(Action action)
         {
-            CoroutineGlobal.RunAfter(new WaitForFixedUpdate(), action);
+            CoroutineGlobal.RunAfter(s_fixedUpdate, action);
         }
 
-        /// <summary>
-        /// Executes an action after a delay (scaled time).
-        /// </summary>
-        /// <param name="seconds">Delay in seconds.</param>
         public static void WaitForSeconds(float seconds, Action action)
         {
-            CoroutineGlobal.RunAfter(new WaitForSeconds(seconds), action);
+            CoroutineGlobal.RunAfter(GetScaled(seconds), action);
         }
 
-        /// <summary>
-        /// Executes an action after a delay (unscaled realtime).
-        /// </summary>
-        /// <param name="seconds">Delay in seconds.</param>
         public static void WaitForSecondsRealtime(float seconds, Action action)
         {
-            CoroutineGlobal.RunAfter(new WaitForSecondsRealtime(seconds), action);
+            CoroutineGlobal.RunAfter(GetRealtime(seconds), action);
         }
 
-        /// <summary>
-        /// Executes an action after a random delay between min and max (scaled time).
-        /// </summary>
         public static void WaitForSecondsRandom(float min, float max, Action action)
         {
-            float delay = UnityEngine.Random.Range(min, max);
-            WaitForSeconds(delay, action);
+            WaitForSeconds(UnityEngine.Random.Range(min, max), action);
         }
-        
-        /// <summary>
-        /// Executes an action when the given condition becomes true.
-        /// 
-        /// Example:
-        /// CoroutineUtility.WaitUntil(() => isReady, OnReady);
-        /// </summary>
-        /// <param name="predicate">Condition to evaluate.</param>
-        /// <param name="action">Callback when condition is met.</param>
+
         public static void WaitUntil(Func<bool> predicate, Action action)
         {
             if (predicate == null || action == null)
                 return;
 
-            CoroutineGlobal.RunAfter(new WaitUntil(predicate), action);
+            // WaitUntil có trạng thái theo predicate nên không cache được.
+            CoroutineGlobal.RunAfter(new UnityEngine.WaitUntil(predicate), action);
+        }
+
+        // =====================================================
+        // CACHE
+        // =====================================================
+
+        static UnityEngine.WaitForSeconds GetScaled(float seconds)
+        {
+            int key = KeyOf(seconds);
+
+            if (s_scaledCache.TryGetValue(key, out var cached))
+                return cached;
+
+            var instruction = new UnityEngine.WaitForSeconds(seconds);
+            if (s_scaledCache.Count < MaxCachedDurations)
+                s_scaledCache[key] = instruction;
+
+            return instruction;
+        }
+
+        static UnityEngine.WaitForSecondsRealtime GetRealtime(float seconds)
+        {
+            int key = KeyOf(seconds);
+
+            if (s_realtimeCache.TryGetValue(key, out var cached))
+                return cached;
+
+            var instruction = new UnityEngine.WaitForSecondsRealtime(seconds);
+            if (s_realtimeCache.Count < MaxCachedDurations)
+                s_realtimeCache[key] = instruction;
+
+            return instruction;
+        }
+
+        // Khóa theo mili-giây: đủ chính xác cho coroutine, và tránh so sánh float.
+        static int KeyOf(float seconds)
+        {
+            return Mathf.RoundToInt(Mathf.Max(0f, seconds) * 1000f);
         }
     }
 }

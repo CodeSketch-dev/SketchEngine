@@ -128,9 +128,10 @@ namespace SketchEngine.Core.Async
             action.Invoke();
         }
 
+        // yield trực tiếp IEnumerator: Unity chạy nó lồng trong coroutine này, không cần StartCoroutine thêm.
         IEnumerator Co_RunCoroutine(IEnumerator coroutine, Action onComplete)
         {
-            yield return StartCoroutine(coroutine);
+            yield return coroutine;
             onComplete?.Invoke();
         }
     }

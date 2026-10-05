@@ -22,9 +22,9 @@ namespace SketchEngine.Utilities.Animations
         public override void AddToSequence(AnimationSequence animationSequence)
         {
             if (_isInserted)
-                animationSequence.sequence.InsertCallback(_insertTime, () => { _callback?.Invoke(); });
+                animationSequence.Sequence.InsertCallback(_insertTime, () => { _callback?.Invoke(); });
             else
-                animationSequence.sequence.AppendCallback(() => { _callback?.Invoke(); });
+                animationSequence.Sequence.AppendCallback(() => { _callback?.Invoke(); });
         }
     }
 }

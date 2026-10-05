@@ -9,7 +9,7 @@ namespace SketchEngine.Utilities.Animations
 
         protected override Tween GetTween(AnimationSequence animationSequence)
         {
-            RectTransform owner = _isSelf ? animationSequence.rectTransform : _owner;
+            RectTransform owner = _isSelf ? animationSequence.RectTransformCached : _owner;
 
             float duration = _isSpeedBased ? Vector2.Distance(_value, owner.anchoredPosition3D) / _duration : _duration;
             Vector3 start = _changeStartValue ? _valueStart : owner.anchoredPosition3D;
@@ -25,8 +25,7 @@ namespace SketchEngine.Utilities.Animations
 
         protected override Tween GetResetTween(AnimationSequence animationSequence)
         {
-            RectTransform owner = _isSelf ? animationSequence.rectTransform : _owner;
-
+            RectTransform owner = _isSelf ? animationSequence.RectTransformCached : _owner;
             return owner.DOAnchorPos3D(owner.anchoredPosition3D, 0.0f);
         }
     }

@@ -65,13 +65,13 @@ namespace SketchEngine.Utilities.Animations
                 switch (_addType)
                 {
                     case AddType.Append:
-                        animationSequence.sequence.Append(GetResetTween(animationSequence));
+                        animationSequence.Sequence.Append(GetResetTween(animationSequence));
                         break;
                     case AddType.Join:
-                        animationSequence.sequence.Join(GetResetTween(animationSequence));
+                        animationSequence.Sequence.Join(GetResetTween(animationSequence));
                         break;
                     case AddType.Insert:
-                        animationSequence.sequence.Insert(_insertTime, GetResetTween(animationSequence));
+                        animationSequence.Sequence.Insert(_insertTime, GetResetTween(animationSequence));
                         break;
                 }
             }
@@ -85,13 +85,13 @@ namespace SketchEngine.Utilities.Animations
             switch (_addType)
             {
                 case AddType.Append:
-                    animationSequence.sequence.Append(tween);
+                    animationSequence.Sequence.Append(tween);
                     break;
                 case AddType.Join:
-                    animationSequence.sequence.Join(tween);
+                    animationSequence.Sequence.Join(tween);
                     break;
                 case AddType.Insert:
-                    animationSequence.sequence.Insert(_insertTime, tween);
+                    animationSequence.Sequence.Insert(_insertTime, tween);
                     break;
             }
         }

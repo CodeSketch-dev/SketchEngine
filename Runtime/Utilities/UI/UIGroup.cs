@@ -12,7 +12,7 @@ namespace SketchEngine.Utilities.UI
     /// Gồm sự kiện callback, UnityEvent, và DOTween hỗ trợ fade.
     /// </summary>
     [RequireComponent(typeof(CanvasGroup))]
-    public class UIGroup : MonoBase
+    public class UIGroup : MonoCached
     {
         [Title("Config")]
         [SerializeField] float _fadeInDuration = 0.3f;
@@ -32,7 +32,7 @@ namespace SketchEngine.Utilities.UI
         public Action OnHideComplete;
 
         /// <summary>CanvasGroup được cache</summary>
-        public CanvasGroup canvasGroup => _canvasGroup ??= GetComponent<CanvasGroup>();
+        public CanvasGroup CanvasGroup => _canvasGroup ??= GetComponent<CanvasGroup>();
 
         void OnDestroy()
         {
@@ -46,7 +46,7 @@ namespace SketchEngine.Utilities.UI
         {
             GameObjectCached.SetActive(true);
 
-            var cg = canvasGroup;
+            var cg = CanvasGroup;
             cg.blocksRaycasts = true;
             cg.interactable = true;
 
@@ -68,7 +68,7 @@ namespace SketchEngine.Utilities.UI
             if (!GameObjectCached.activeInHierarchy)
                 return;
 
-            var cg = canvasGroup;
+            var cg = CanvasGroup;
             cg.blocksRaycasts = false;
             cg.interactable = false;
 

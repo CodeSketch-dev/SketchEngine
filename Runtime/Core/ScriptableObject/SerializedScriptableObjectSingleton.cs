@@ -7,7 +7,7 @@ namespace SketchEngine.SO
 {
     public class SerializedScriptableObjectSingleton<T> : SerializedScriptableObject where T : SerializedScriptableObject
     {
-        static string s_rootFolderName => "CodeSketch/ScriptableObjectSingletons";
+        static string s_rootFolderName => "SketchEngine/ScriptableObjectSingletons";
 
         static T s_instance = null;
 

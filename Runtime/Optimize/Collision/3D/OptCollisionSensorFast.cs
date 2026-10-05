@@ -1,55 +1,101 @@
-using System;
 using UnityEngine;
 
 namespace SketchEngine.Optimize
 {
-    /// <summary>
-    /// OptCollisionSensor kế thừa MonoCachedFast — có thêm GetCached&lt;T&gt;() component caching.
-    /// Dùng khi sensor cần GetComponent không-GC trên cùng GameObject.
-    /// </summary>
-    public abstract class OptCollisionSensorFast<T> : SketchEngine.MonoCachedFast
-        where T : class
+    // Cùng hành vi với OptCollisionSensor, khác base class MonoCachedFast (cache component nhanh hơn).
+    public abstract class OptCollisionSensorFast : SketchEngine.MonoCachedFast
     {
-        Action<T> _cachedCollisionEnter;
-        Action<T> _cachedCollisionExit;
-        Action<T> _cachedTriggerEnter;
-        Action<T> _cachedTriggerExit;
-
-        // ==================== COLLISION ====================
-
         protected virtual void OnCollisionEnter(Collision collision)
         {
-            var col = collision.collider;
-            if (col == null) return;
-            _cachedCollisionEnter ??= OnCollisionEnterFunc;
-            OptCollisionLookup.ForEach<T>(col, _cachedCollisionEnter);
+            if (!OptCollisionLookup.TryGetSlot(collision.collider, out OptSlot slot)) return;
+            OptCollisionLookup.BeginDispatch();
+            try
+            {
+                int n = slot.Count;
+                for (int i = 0; i < n; i++)
+                {
+                    MonoBehaviour owner = slot.Items[i];
+                    if (owner != null) OnCollisionEnterOwner(owner);
+                }
+            }
+            finally { OptCollisionLookup.EndDispatch(); }
         }
 
         protected virtual void OnCollisionExit(Collision collision)
         {
-            var col = collision.collider;
-            if (col == null) return;
-            _cachedCollisionExit ??= OnCollisionExitFunc;
-            OptCollisionLookup.ForEach<T>(col, _cachedCollisionExit);
+            if (!OptCollisionLookup.TryGetSlot(collision.collider, out OptSlot slot)) return;
+            OptCollisionLookup.BeginDispatch();
+            try
+            {
+                int n = slot.Count;
+                for (int i = 0; i < n; i++)
+                {
+                    MonoBehaviour owner = slot.Items[i];
+                    if (owner != null) OnCollisionExitOwner(owner);
+                }
+            }
+            finally { OptCollisionLookup.EndDispatch(); }
         }
-
-        // ==================== TRIGGER ======================
 
         protected virtual void OnTriggerEnter(Collider other)
         {
-            if (other == null) return;
-            _cachedTriggerEnter ??= OnTriggerEnterFunc;
-            OptCollisionLookup.ForEach<T>(other, _cachedTriggerEnter);
+            if (!OptCollisionLookup.TryGetSlot(other, out OptSlot slot)) return;
+            OptCollisionLookup.BeginDispatch();
+            try
+            {
+                int n = slot.Count;
+                for (int i = 0; i < n; i++)
+                {
+                    MonoBehaviour owner = slot.Items[i];
+                    if (owner != null) OnTriggerEnterOwner(owner);
+                }
+            }
+            finally { OptCollisionLookup.EndDispatch(); }
         }
 
         protected virtual void OnTriggerExit(Collider other)
         {
-            if (other == null) return;
-            _cachedTriggerExit ??= OnTriggerExitFunc;
-            OptCollisionLookup.ForEach<T>(other, _cachedTriggerExit);
+            if (!OptCollisionLookup.TryGetSlot(other, out OptSlot slot)) return;
+            OptCollisionLookup.BeginDispatch();
+            try
+            {
+                int n = slot.Count;
+                for (int i = 0; i < n; i++)
+                {
+                    MonoBehaviour owner = slot.Items[i];
+                    if (owner != null) OnTriggerExitOwner(owner);
+                }
+            }
+            finally { OptCollisionLookup.EndDispatch(); }
         }
 
-        // ==================== GAMEPLAY CALLBACKS ============
+        protected virtual void OnCollisionEnterOwner(MonoBehaviour owner) { }
+        protected virtual void OnCollisionExitOwner(MonoBehaviour owner) { }
+        protected virtual void OnTriggerEnterOwner(MonoBehaviour owner) { }
+        protected virtual void OnTriggerExitOwner(MonoBehaviour owner) { }
+    }
+
+    public abstract class OptCollisionSensorFast<T> : OptCollisionSensorFast where T : class
+    {
+        protected sealed override void OnCollisionEnterOwner(MonoBehaviour owner)
+        {
+            if (owner is T target) OnCollisionEnterFunc(target);
+        }
+
+        protected sealed override void OnCollisionExitOwner(MonoBehaviour owner)
+        {
+            if (owner is T target) OnCollisionExitFunc(target);
+        }
+
+        protected sealed override void OnTriggerEnterOwner(MonoBehaviour owner)
+        {
+            if (owner is T target) OnTriggerEnterFunc(target);
+        }
+
+        protected sealed override void OnTriggerExitOwner(MonoBehaviour owner)
+        {
+            if (owner is T target) OnTriggerExitFunc(target);
+        }
 
         protected virtual void OnCollisionEnterFunc(T target) { }
         protected virtual void OnCollisionExitFunc(T target) { }

@@ -1,6 +1,6 @@
 using UnityEngine;
 
-#if UNITY_ANDROID && CODESKETCH_APPSTORE
+#if UNITY_ANDROID && SKETCHENGINE_APPSTORE
 using Google.Play.Review;
 using Cysharp.Threading.Tasks;
 using System.Threading;
@@ -10,7 +10,7 @@ namespace SketchEngine.AppStore
 {
     public static class AppStore
     {
-#if UNITY_ANDROID && CODESKETCH_APPSTORE
+#if UNITY_ANDROID && SKETCHENGINE_APPSTORE
         static ReviewManager s_reviewManager;
         static PlayReviewInfo s_playReviewInfo;
         static CancellationTokenSource s_cts;
@@ -54,7 +54,7 @@ namespace SketchEngine.AppStore
 
         public static void Init()
         {
-#if UNITY_ANDROID && CODESKETCH_APPSTORE
+#if UNITY_ANDROID && SKETCHENGINE_APPSTORE
             s_cts?.Cancel();
             s_cts = new CancellationTokenSource();
 
@@ -81,7 +81,7 @@ namespace SketchEngine.AppStore
 
         public static void Review()
         {
-#if UNITY_ANDROID && CODESKETCH_APPSTORE
+#if UNITY_ANDROID && SKETCHENGINE_APPSTORE
             s_cts?.Cancel();
             s_cts = new CancellationTokenSource();
 
